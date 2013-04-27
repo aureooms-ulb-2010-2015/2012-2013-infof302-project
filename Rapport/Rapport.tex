@@ -131,6 +131,36 @@ $\bordermatrix[{[]}]{
 Chaque case est représentée par une variable $x$, de sorte que la case à la $i^{eme}$ ligne et à la $j^{eme}$ colonne se note $x_{i,j}$
 
 \section{Parcours}
+
+On va parcourir la grille et énumérer les combinaisons possibles premièrement suivant les contraintes de lignes ensuite selon les contraintes de colonnes.\\ 
+
+Par ligne (respectivement colonne), on crée si nécessaire une clause représentant les cas possibles quant aux cases dont on ne connait pas encore la nature.\\
+
+Pour chaque case contenue dans une ligne donnée:
+\begin{enumerate}
+\item Si elle contient une information, on en créer une clause à part entière qui sera jointe aux autres.
+\item Si elle ne contient pas d'informations et conditionnellement à la contrainte, on énumère les possibilités sous forme disjonctive (clause).
+\end{enumerate}
+On effectue de même par colonne et relativement aux contraintes de la colonne.\\
+
+L'énumération des cas possibles se formule naturellement à l'aide de la disjonction exclusive (XOR ou $\oplus$), à chaque étape, il convient de la traduire en forme normale conjonctive (FNC).
+$$ a\oplus b \equiv (a \wedge \lnot b)\vee(\lnot a \wedge b) \equiv (a\vee b)\wedge\lnot(a\wedge b)$$
+\begin{displaymath}
+\begin{array}{c|c|c|c|c}
+   a
+ & b
+ & a \oplus b
+ & (a\land{}\lnot{}b)\lor{}(\lnot{}a\land{}b)
+  & (a\lor{}b)\land{}\lnot{}(a\land{}b) \\
+\hline
+0 & 0 & 0 & 0 & 0 \\
+0 & 1 & 1 & 1 & 1 \\
+1 & 0 & 1 & 1 & 1 \\
+1 & 1 & 0 & 0 & 0 \\
+
+\end{array}
+\end{displaymath}
+
 \begin{algorithm}
 \caption{Énumération selon les contraintes de lignes et de colonnes}
 \begin{algorithmic}
