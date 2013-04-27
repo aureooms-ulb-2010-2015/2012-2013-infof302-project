@@ -1,0 +1,186 @@
+%----------------------------------------------------------------------------------------
+%	DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[a4paper,12pt]{report}
+\usepackage[francais]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{ucs}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage[table]{xcolor}
+\usepackage{mathtools,amssymb,amsthm}%
+\usepackage[left=2.5cm,top=2cm,right=2.5cm,nohead,nofoot]{geometry}
+\usepackage{pdfpages}
+\usepackage[table]{xcolor}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\linespread{1.1}
+%%%%%%%%%%%%%%%%%
+\makeatletter
+\newif\if@borderstar
+\def\bordermatrix{\@ifnextchar*{%
+\@borderstartrue\@bordermatrix@i}{\@borderstarfalse\@bordermatrix@i*}%
+}
+\def\@bordermatrix@i*{\@ifnextchar[{\@bordermatrix@ii}{\@bordermatrix@ii[()]}}
+\def\@bordermatrix@ii[#1]#2{%
+\begingroup
+\m@th\@tempdima8.75\p@\setbox\z@\vbox{%
+\def\cr{\crcr\noalign{\kern 2\p@\global\let\cr\endline }}%
+\ialign {$##$\hfil\kern 2\p@\kern\@tempdima & \thinspace %
+\hfil $##$\hfil && \quad\hfil $##$\hfil\crcr\omit\strut %
+\hfil\crcr\noalign{\kern -\baselineskip}#2\crcr\omit %
+\strut\cr}}%
+\setbox\tw@\vbox{\unvcopy\z@\global\setbox\@ne\lastbox}%
+\setbox\tw@\hbox{\unhbox\@ne\unskip\global\setbox\@ne\lastbox}%
+\setbox\tw@\hbox{%
+$\kern\wd\@ne\kern -\@tempdima\left\@firstoftwo#1%
+\if@borderstar\kern2pt\else\kern -\wd\@ne\fi%
+\global\setbox\@ne\vbox{\box\@ne\if@borderstar\else\kern 2\p@\fi}%
+\vcenter{\if@borderstar\else\kern -\ht\@ne\fi%
+\unvbox\z@\kern-\if@borderstar2\fi\baselineskip}%
+\if@borderstar\kern-2\@tempdima\kern2\p@\else\,\fi\right\@secondoftwo#1 $%
+}\null \;\vbox{\kern\ht\@ne\box\tw@}%
+\endgroup
+}
+\makeatother
+%%%%%%%%%%%%%%%%%
+\newcommand\black{\cellcolor{black}}
+\newcommand\grey{\cellcolor{black!50}}
+
+%%%%%%%%%%%%%%%%%
+\begin{document}
+
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs
+
+
+\begin{titlepage}
+\begin{center}
+\textbf{\textsc{UNIVERSIT\'E LIBRE DE BRUXELLES}}\\
+\textbf{\textsc{Faculté des Sciences}}\\
+\textbf{\textsc{Département d'Informatique}}
+\vfill{}\vfill{}
+\begin{center}{\Huge INFO-F-302 - Logique Informatique \\Projet: Le jeu Pattern et Utilisation de MiniSAT}\end{center}{\Huge \par}
+\begin{center}{\large \textsc{Ooms} Aurélien, \textsc{Sonnet} Jean-Baptiste}\end{center}{\Huge \par}
+\vfill{}\vfill{}
+\vfill{}\vfill{}\enlargethispage{3cm}
+\textbf{Année académique 2012~-~2013}
+\end{center}
+\end{titlepage}
+
+
+
+
+\tableofcontents
+\newpage
+
+
+\chapter{Énumération 3,2}
+
+\section{Problème et notation}
+\subsection{Grille}
+Le problème est présenté sous forme d'une grille $3\times3$ contenant au $max$ 2 contraintes par ligne ou colonne.\\
+
+Soit une matrice $3\times3$,  
+$$\begin{bmatrix} x_{0,0} & x_{0,1} & x_{0,2} \\ x_{1,0} & x_{1,1} & x_{1,2} \\ x_{2,0} & x_{2,1} & x_{2,2}\end{bmatrix}$$ 
+où chacune des cases $x_{i,j}$ prendra potentiellement une des 3 valeurs: 
+$\{0,1,-1\}$, respectivement l'inconnu, le noir, le blanc.\\
+
+On aura par exemple comme problème à résoudre:
+\begin{center}
+$\bordermatrix[{[]}]{
+	\text{ }	 
+		& 2		& 1		& 2		\cr
+1	 	& 1		& -1 	& 0		\cr
+1\; 1  	& 0 	& 0 	& 0		\cr
+2    	& 0 	& 0 	& 0		\cr
+} $
+\begin{tabular}{|c|c|c|}
+\hline 
+\black• &   & \grey?  \\ 
+\hline 
+\grey? & \grey?  & \grey? \\ 
+\hline 
+\grey? & \grey? & \grey? \\ 
+\hline 
+\end{tabular}
+\end{center}
+
+Selon les contraintes précisées, la solution devra donner pour toutes les cases inconnues une valeur de $1$ ou $-1$:\\
+\begin{center}
+$\bordermatrix[{[]}]{
+	\text{ }	 
+		& 2		& 1		& 2		\cr
+1	 	& 1		& -1 	& -1	\cr
+1\; 1  	& 1 	& -1 	& 1		\cr
+2    	& -1 	& 1 	& 1		\cr
+}$
+\begin{tabular}{|c|c|c|}
+\hline 
+\black• &  &  \\ 
+\hline 
+\black• &  & \black• \\ 
+\hline 
+ & \black• & \black• \\ 
+\hline 
+\end{tabular}
+\end{center}
+\subsection{Cases}
+Chaque case est représentée par une variable $x$, de sorte que la case à la $i^{eme}$ ligne et à la $j^{eme}$ colonne se note $x_{i,j}$
+
+\section{Parcours}
+\begin{algorithm}
+\caption{Énumération selon les contraintes de lignes et de colonnes}
+\begin{algorithmic}
+
+\For{ligne $i \to n$}
+		\For{colonne $j \to n$}
+			\If{$x_{i,j}==-1$}
+				\State Créer une nouvelle $clause$ avec $-x_{i,j}$
+			\EndIf
+			\If{$x_{i,j}==1$}
+				\State Créer une nouvelle $clause$ avec $x_{i,j}$
+			\EndIf
+			\If{$x_{i,j}==0$}
+				\If{$\not\exists \; clause_i$}
+				 \State Créer $clause_i$
+				\EndIf
+				\State	Ajouter ($\vee$) $x_{i,j}$ à la $clause_i$ 
+			\EndIf
+		\State Joindre ($\wedge$) les $clauses$
+		\EndFor
+		\If{$\exists \; clause_i$}
+			\State Joindre ($\wedge$) la $clause_i$
+		\EndIf
+\EndFor
+\For{colonne $j \to n$}		
+		\For{ligne $i \to n$}
+			\If{$x_{i,j}==-1$}
+				\State Créer une nouvelle $clause$ avec $-x_{i,j}$
+			\EndIf
+			\If{$x_{i,j}==1$}
+				\State Créer une nouvelle $clause$ avec $x_{i,j}$
+			\EndIf
+			\If{$x_{i,j}==0$}
+				\If{$\not\exists \; clause_j$}
+				 \State Créer $clause_j$
+				\EndIf
+				\State	Ajouter ($\vee$) $x_{i,j}$ à la $clause_j$ 
+			\EndIf
+		\State Joindre ($\wedge$) les $clauses$
+		\EndFor
+		\If{$\exists \; clause_j$}
+			\State Joindre ($\wedge$) la $clause_j$
+		\EndIf
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+Représentation du problème en fonction normale conjonctive par énumération.
+ 
+
+
+	
+						
+\end{document}
