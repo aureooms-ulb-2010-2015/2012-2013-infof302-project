@@ -214,13 +214,12 @@ $$ a\oplus b \equiv (a \wedge \lnot b)\vee(\lnot a \wedge b) \equiv (a\vee b)\we
 
 Une suite de cases noires représente une \textit{bande}. 
 
-Une bande appartient à une ligne ou colonne et commence à une position donnée, comme il peut y avoir plusieurs bandes sur une même ligne ou colonne, elle doit être identifiable.
-
+Une bande appartient à une ligne ou colonne et commence à une position donnée. Comme il peut y avoir plusieurs bandes sur une même ligne ou colonne, chaque bande doit être identifiable.\\
 
 On représente une bande par $$LBande_{pos,ID,start}$$
 où,
 \begin{description}
-\item[L|C] désigne s'il s'agit d'une ligne ou d'une colonne.
+\item[L|C] précise s'il s'agit d'une ligne ou d'une colonne.
 \item[pos] désigne le numéro de la ligne ou la colonne où est située la bande.
 \item[ID] désigne, s'il existe plusieurs bandes sur la ligne ou colonne, la bande que l'on considère.
 \item[start] désigne le numéro de colonne ou ligne à partir de laquelle commence la bande.\\
@@ -249,9 +248,9 @@ On aura pour la grille \ref{Grille3X3}:
 $$\mathtt{LBande}_{3,1,2} = \top$$
 $$L(3,2) = 2$$
 et\\
-$$x_{3,j} = \top, \forall j \in [3,3+\mathtt{L}(3,2)]$$
+$$x_{3,j} = \top, \forall j \in [3,2+\mathtt{L}(3,2)]$$
 $$\wedge$$
-$$x_{3,3+\mathtt{L}(3,2)+1} = \bot  $$
+$$x_{3,2+\mathtt{L}(3,2)+1} = \bot  $$
 \section{Représentation par bandes}
 \subsection{Observation: position minimale, maximale et sous-espace}
 
@@ -305,7 +304,7 @@ Il est alors possible d'appliquer la même analyse quant à la détermination de
 
 Une fois les positions de la seconde bande déterminées, elles délimiteront l'espace restant pour la dernière bande. 
 
-Suite à cela, il est possible d'élaborer une méthode récursive, ou faussement récursive, mais au nombre d'itérations réduit.
+Suite à cela, il est possible d'élaborer une méthode récursive, ou faussement récursive, au nombre d'itérations réduit, permettant d'énumérer les possibilités de placement des bandes.
 
 \subsection{Énumération récursive}
 \begin{table}[H]
