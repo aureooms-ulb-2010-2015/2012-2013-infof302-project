@@ -14,8 +14,10 @@
 \usepackage[left=2.5cm,top=2cm,right=2.5cm,nohead,nofoot]{geometry}
 \usepackage{pdfpages}
 \usepackage[table]{xcolor}
+\usepackage{color}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+\usepackage{array}
 \linespread{1.1}
 %%%%%%%%%%%%%%%%%
 \makeatletter
@@ -130,7 +132,8 @@ $\bordermatrix[{[]}]{
 \subsection{Cases}
 Chaque case est représentée par une variable $x$, de sorte que la case à la $i^{eme}$ ligne et à la $j^{eme}$ colonne se note $x_{i,j}$
 
-\section{Parcours}
+\section{Parcours et représentation par énumération}
+
 
 On va parcourir la grille et énumérer les combinaisons possibles premièrement suivant les contraintes de lignes ensuite selon les contraintes de colonnes.\\ 
 
@@ -161,18 +164,17 @@ $$ a\oplus b \equiv (a \wedge \lnot b)\vee(\lnot a \wedge b) \equiv (a\vee b)\we
 \end{array}
 \end{displaymath}
 
+
 \begin{algorithm}
 \caption{Énumération selon les contraintes de lignes et de colonnes}
 \begin{algorithmic}
-\For{ligne $i \to n$}
+\For{ligne $i \to n$}\Comment{contraintes de lignes}
 		\For{colonne $j \to n$}
-			\If{$x_{i,j}==-1$}
+			\If{$x_{i,j} == \bot$}
 				\State Créer une nouvelle $clause$ avec $-x_{i,j}$
-			\EndIf
-			\If{$x_{i,j}==1$}
+			\ElsIf{$x_{i,j} == \top$}
 				\State Créer une nouvelle $clause$ avec $x_{i,j}$
-			\EndIf
-			\If{$x_{i,j}==0$}
+			\ElsIf {$x_{i,j}==0$}
 				\If{$\not\exists \; clause_i$}
 				 \State Créer $clause_i$
 				\EndIf
@@ -184,15 +186,14 @@ $$ a\oplus b \equiv (a \wedge \lnot b)\vee(\lnot a \wedge b) \equiv (a\vee b)\we
 			\State Joindre ($\wedge$) la $clause_i$
 		\EndIf
 \EndFor
-\For{colonne $j \to n$}		
+
+\For{colonne $j \to n$}	\Comment{contraintes de colonnes}
 		\For{ligne $i \to n$}
-			\If{$x_{i,j}==-1$}
+			\If{$x_{i,j}==\bot$}
 				\State Créer une nouvelle $clause$ avec $-x_{i,j}$
-			\EndIf
-			\If{$x_{i,j}==1$}
+			\ElsIf{$x_{i,j}==\top$}
 				\State Créer une nouvelle $clause$ avec $x_{i,j}$
-			\EndIf
-			\If{$x_{i,j}==0$}
+			\ElsIf{$x_{i,j}==0$}
 				\If{$\not\exists \; clause_j$}
 				 \State Créer $clause_j$
 				\EndIf
@@ -207,6 +208,144 @@ $$ a\oplus b \equiv (a \wedge \lnot b)\vee(\lnot a \wedge b) \equiv (a\vee b)\we
 \end{algorithmic}
 \end{algorithm}
 
+
+\chapter{Les Bandes}
+\section{Problème et notation}
+
+Une suite de cases noires représente une \textit{bande}. 
+
+Une bande appartient à une ligne ou colonne et commence à une position donnée, comme il peut y avoir plusieurs bandes sur une même ligne ou colonne, elle doit être identifiable.
+
+
+On représente une bande par $$LBande_{pos,ID,start}$$
+où,
+\begin{description}
+\item[L|C] désigne s'il s'agit d'une ligne ou d'une colonne.
+\item[pos] désigne le numéro de la ligne ou la colonne où est située la bande.
+\item[ID] désigne, s'il existe plusieurs bandes sur la ligne ou colonne, la bande que l'on considère.
+\item[start] désigne le numéro de colonne ou ligne à partir de laquelle commence la bande.\\
+\end{description}
+
+On défini deux fonctions donnant la longueur d'une bande:
+\begin{description}
+\item[$\mathtt{L}(pos,ID)$] donnant la longueur de la $ID^{eme}$ bande à la ligne $pos$.
+\item[$\mathtt{C}(pos,ID)$] donnant la longueur de la $ID^{eme}$ bande à la colonne $pos$.\\
+\end{description} 
+
+\begin{table}[H]
+   \centering
+	\begin{tabular}{|c|c|c|}
+	\hline 
+	\black• &  &  \\ 
+	\hline 
+	\black• &  & \black• \\ 
+	\hline 
+	 & \black• & \black• \\ 
+	\hline 
+	\end{tabular}
+\caption{\label{Grille3X3} Grille $3\times3$}
+\end{table}
+On aura pour la grille \ref{Grille3X3}:
+$$\mathtt{LBande}_{3,1,2} = \top$$
+$$L(3,2) = 2$$
+et\\
+$$x_{3,j} = \top, \forall j \in [3,3+\mathtt{L}(3,2)]$$
+$$\wedge$$
+$$x_{3,3+\mathtt{L}(3,2)+1} = \bot  $$
+\section{Représentation par bandes}
+\subsection{Observation: position minimale, maximale et sous-espace}
+
+Soit une colonne d'une longueur de 8 cases avec pour contrainte 3 bandes de taille 1, 2 et 1.
+
+La première bande pourra prendre la position minimum $x_{1,0}$ et maximum $x_{1,\alpha}$.
+
+La valeur de $\alpha$ peut être obtenue à partir du nombre de contraintes, de la taille des différentes bandes et de la règle selon laquelle deux bandes sont séparés d'au moins une case.\\
+
+Dans l'exemple, on obtient:
+\begin{itemize}
+\item[] $c = 3$, où $c$ est le nombre de contraintes
+\item[] $l = 8$ est la longueur de la colonne
+\item[] $L_{total} = 4$, est la longueur cumulée des bandes dans la colonne
+\item[] $\alpha = l-(L_{total}+(c-1))$
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l||c|c|c|}
+\hline 
+0&\black• &  &  \\ 
+\hline 
+1 & &  &  \\ 
+\hline 
+2 & \grey &  & \black• \\ 
+\hline 
+3&\grey &  & \\ 
+\hline 
+4&\grey &  & \grey \\ 
+\hline 
+5&\grey &  & \grey \\ 
+\hline 
+6&\grey &  & \grey \\ 
+\hline 
+7&\grey &  & \grey \\ 
+\hline &&\\
+[-1.3em]\hline
+&$min$ &  & $max$ \\ 
+\hline 
+\end{tabular} 
+\caption{\label{bande8X1} position $max$ et $min$ sur une colonne $8\times1$ avec la contrainte 1 2 1}
+\end{table}
+
+
+On voit dans le tableau \ref{bande8X1} qu'il est possible de connaitre \textit{a priori} le nombre restreint de positions possibles pour la première bande. 
+
+On voit aussi que chaque possibilité délimite un \textit{sous-espace} (zone grisée) au sein duquel devront être placées les bandes restantes.
+
+Il est alors possible d'appliquer la même analyse quant à la détermination de la position de la bande suivante au sein du sous-espace.
+
+Une fois les positions de la seconde bande déterminées, elles délimiteront l'espace restant pour la dernière bande. 
+
+Suite à cela, il est possible d'élaborer une méthode récursive, ou faussement récursive, mais au nombre d'itérations réduit.
+
+\subsection{Énumération récursive}
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|l|c|l|c|c|c|}
+\hline 
+\grey &&\black & \multicolumn{5}{l|}{$\updownarrow \mathtt{L}(1,1) = 1$}& $x_{1,1}=\top$ \\ 
+\hline 
+\grey && & \multicolumn{5}{l|}{+1} & $x_{1,2}=\bot$ \\ 
+\hline
+\grey &&\grey &  &  & \multicolumn{3}{l|}{$\#$ itération}& $x_{1,3}=\bot$ \\ 
+\hline 
+\grey &&\grey &  & \black - & \multicolumn{3}{l|}{$\updownarrow \mathtt{L}(1,2) = 2$}& $x_{1,4}=\top$ \\ 
+\cline{1-5}\cline{9-9}
+\grey &&\grey &  & \black - & \multicolumn{3}{l|}{}& $x_{1,5}=\top$\\ 
+\hline 
+\grey &&\grey &  &  & \multicolumn{3}{l|}{+1} & $x_{1,6}=\bot$\\ 
+\hline 
+\grey &&\grey &  & \grey &  & \black - & $\updownarrow \mathtt{L}(1,3) = 1$ & $x_{1,7}=\top$ \\ 
+\hline 
+\grey &&\grey &  & \grey &  &  &  & $x_{1,8}=\bot$\\ 
+\hline
+\hline 
+ $\bullet$&&$r_1$ &  & $r_1$ &  &$r_3$&  \multicolumn{2}{c|}{récursion}\\
+\hline
+\end{tabular}
+\caption{\label{EnumBande} Énumération récursive sur une colonne $8\times1$ avec la contrainte 1 2 1}
+\end{table}
+
+ 
+\begin{algorithm}
+\caption{Énumération des bandes}
+\begin{algorithmic}
+\For{ligne $i \to n$}
+		\For{colonne $j \to n$}
+		nop();		
+		\EndFor			
+\EndFor
+\end{algorithmic}
+\end{algorithm}
 
 	
 						

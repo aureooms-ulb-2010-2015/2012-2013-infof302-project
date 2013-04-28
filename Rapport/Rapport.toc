@@ -3,4 +3,9 @@
 \contentsline {section}{\numberline {1.1}Probl\IeC {\`e}me et notation}{2}
 \contentsline {subsection}{\numberline {1.1.1}Grille}{2}
 \contentsline {subsection}{\numberline {1.1.2}Cases}{2}
-\contentsline {section}{\numberline {1.2}Parcours}{3}
+\contentsline {section}{\numberline {1.2}Parcours et repr\IeC {\'e}sentation par \IeC {\'e}num\IeC {\'e}ration}{3}
+\contentsline {chapter}{\numberline {2}Les Bandes}{5}
+\contentsline {section}{\numberline {2.1}Probl\IeC {\`e}me et notation}{5}
+\contentsline {section}{\numberline {2.2}Repr\IeC {\'e}sentation par bandes}{6}
+\contentsline {subsection}{\numberline {2.2.1}Observation: position minimale, maximale et sous-espace}{6}
+\contentsline {subsection}{\numberline {2.2.2}\IeC {\'E}num\IeC {\'e}ration r\IeC {\'e}cursive}{7}
