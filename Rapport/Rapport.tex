@@ -86,9 +86,9 @@ $\kern\wd\@ne\kern -\@tempdima\left\@firstoftwo#1%
 Le problème est présenté sous forme d'une grille $3\times3$ contenant au $max$ 2 contraintes par ligne ou colonne.\\
 
 Soit une matrice $3\times3$,  
-$$\begin{bmatrix} x_{0,0} & x_{0,1} & x_{0,2} \\ x_{1,0} & x_{1,1} & x_{1,2} \\ x_{2,0} & x_{2,1} & x_{2,2}\end{bmatrix}$$ 
-où chacune des cases $x_{i,j}$ prendra potentiellement une des 3 valeurs: 
-$\{0,1,-1\}$, respectivement l'inconnu, le noir, le blanc.\\
+$$\begin{bmatrix} x_{0,0} & x_{0,1} & x_{0,2} \\ x_{1,0} & x_{1,1} & x_{1,2} \\ x_{2,0} & x_{2,1} & x_{2,2}\end{bmatrix} \rightarrow \begin{bmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \\ 7 & 8 & 9\end{bmatrix}$$ 
+où chacune des cases $x_{i,j}$ prendra potentiellement une des 2 valeurs: 
+$\{-1,1\}$, respectivement le blanc, le noir. Les cases sont initialisées avec la valeur $0$.\\
 
 On aura par exemple comme problème à résoudre:
 \begin{center}
@@ -129,8 +129,70 @@ $\bordermatrix[{[]}]{
 \hline 
 \end{tabular}
 \end{center}
-\subsection{Cases}
-Chaque case est représentée par une variable $x$, de sorte que la case à la $i^{eme}$ ligne et à la $j^{eme}$ colonne se note $x_{i,j}$
+\subsection{Variables}
+Chaque case est représentée par une variable $x$, de sorte que la case à la $i^{eme}$ ligne et à la $j^{eme}$ colonne se note $x_{i,j}$.\\
+
+On a que $(i,j)\in \{1,2,3\}^2$ et que chaque variable peut prendre comme valeur $v \in \{-1,0,1\}$
+soit:
+$$X=\{x_{i,j}| (i,j)\in \{0,1,2\}^2, v \in \{-1,0,1\}\}$$\\
+
+On a pour sémantique: 
+\begin{itemize}
+\item $x_{i,j}$ est \textbf{vrai} \textit{si et seulement si} la case $(i,j)$ a pour valeur $v=1$
+\item $x_{i,j}$ est \textbf{faux} \textit{si et seulement si} la case $(i,j)$ a pour valeur $v=-1$
+\end{itemize}
+
+\subsection{Contraintes}
+\begin{enumerate}
+
+\item (trivial) \textbf{Pour chaque} ligne, s'il existe une bande, \textbf{toutes} les cases ne sont pas fausses.
+$$ \bigwedge_{i \in \{0,1,2\}} \lnot \left( \bigwedge_{j \in \{0,1,2\}} \lnot x_{i,j} \right) $$
+soit,
+$$ \bigwedge_{i \in \{0,1,2\}} \left( \bigvee_{j \in \{0,1,2\}} x_{i,j} \right) $$
+idem pour chaque colonne.
+$$ \bigwedge_{j \in \{0,1,2\}} \left( \bigvee_{i \in \{0,1,2\}} x_{i,j} \right) $$
+
+\item (trivial) \textbf{Pour toutes} lignes, \textbf{pour toutes} colonnes, \textbf{pour toutes} bandes, \textbf{il existe} une case qui satisfait à la fois une bande de la ligne et une de la colonne.
+$$\bigwedge_{i \in \{0,1,2\}} \bigwedge_{j \in \{0,1,2\}} \bigwedge_{b_i^{(k)}, k\in\{1,2\}} 
+\lnot \left(
+	\lnot x_{i,j} \wedge x_{i,j}
+\right)$$
+soit,
+$$\bigwedge_{i \in \{0,1,2\}} \bigwedge_{j \in \{0,1,2\}} \bigwedge_{b_i^{(k)}, k\in\{1,2\}} 
+\left(
+	x_{i,j} \vee \lnot x_{i,j}
+\right)$$
+
+\item \textbf{Pour toutes} lignes $i$, \textbf{pour toutes} bandes $b_i^{(k)}, k\in\{1,2\}$ associées à la ligne, \textbf{il existe} \textit{autant} de cases vraies $x_{i,j}$ que ne l'exprime la taille de la bande. 
+
+Cela donne au cas par cas:
+	\begin{enumerate}
+		\item Une seule bande: 
+		\begin{enumerate}
+			\item Pour toutes lignes $i$ où $b=3$, 
+			$$\bigwedge_{j\in\{0,1,2\}}\left( \bigvee_{l=1}^{n=1} x_{i,j} \right)$$
+			\item Pour toutes lignes $i$ où $b=2$, 
+			$$(\lnot x_{i,0} \vee \lnot x_{i,2}) \wedge (x_{i,0} \vee x_{i,2}) \wedge x_{i,1}$$
+			\item Pour toutes lignes $i$ où $b=1$, 
+			$$\bigwedge_{\stackrel{j,j' \in\{0,1,2\}}{j<j', j''\neq j,j'}} (\lnot x_{i,j}\vee \lnot x_{i,j'} \vee x_{i,j''} ) $$
+			\item Pour toutes lignes $i$ où $b=0$,
+			$$\bigwedge_{j\in\{0,1,2\}}\left( \bigvee_{l=1}^{n=1} \lnot x_{i,j} \right)$$
+		\end{enumerate}
+		\item Deux bandes, pour toutes lignes $i$:
+		$$\left( \bigvee_{l=1}^{n=1} x_{i,0} \right) \wedge \left(\bigvee_{l=1}^{n=1} \lnot x_{i,1}\right) \wedge \left(\bigvee_{l=1}^{n=1} x_{i,2}\right)$$
+	\end{enumerate}
+	Idem pour toutes colonnes. 
+\end{enumerate}
+
+\subsection{Codage}
+Pour miniSAT, il faut coder les propositions par des entiers.
+
+
+La taille d'une grille est de $3\times3$, on codera en base 3.
+
+
+Pour ($i$,$j$,$v$) on aura le codage: $(i \times n²)+(j \times n)+(v+1)$
+
 
 \section{Parcours et représentation par énumération}
 
@@ -139,10 +201,10 @@ On va parcourir la grille et énumérer les combinaisons possibles premièrement
 
 Par ligne (respectivement colonne), on crée si nécessaire une clause représentant les cas possibles quant aux cases dont on ne connait pas encore la nature.\\
 
-Pour chaque case contenue dans une ligne donnée:
+Pour chaque case contenue dans une ligne $i$ donnée:
 \begin{enumerate}
-\item Si elle contient une information, on en créer une clause à part entière qui sera jointe aux autres.
-\item Si elle ne contient pas d'informations et conditionnellement à la contrainte, on énumère les possibilités sous forme disjonctive (clause).
+\item Si elle contient une information ($1$ ou $-1$), on en créer une clause à part entière qui sera jointe ($\wedge$) aux autres.
+\item Si elle ne contient pas d'informations ($0$) et conditionnellement au contraintes $c_i^{(k)}, k\in\{1,2\}$, on énumère les possibilités sous forme disjonctive.
 \end{enumerate}
 On effectue de même par colonne et relativement aux contraintes de la colonne.\\
 
@@ -251,6 +313,9 @@ et\\
 $$x_{3,j} = \top, \forall j \in [3,2+\mathtt{L}(3,2)]$$
 $$\wedge$$
 $$x_{3,2+\mathtt{L}(3,2)+1} = \bot  $$
+\subsection{Variables}
+\subsection{Contraintes}
+\subsection{Codage}
 \section{Représentation par bandes}
 \subsection{Observation: position minimale, maximale et sous-espace}
 
