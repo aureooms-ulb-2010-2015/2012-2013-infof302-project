@@ -203,69 +203,77 @@ Par ligne (respectivement colonne), on crée si nécessaire une clause représen
 
 Pour chaque case contenue dans une ligne $i$ donnée:
 \begin{enumerate}
-\item Si elle contient une information ($1$ ou $-1$), on en créer une clause à part entière qui sera jointe ($\wedge$) aux autres.
+\item Si elle contient une information ($1$ ou $-1$), on en créer une clause à part entière qui sera jointe ($\wedge$) à toutes les autres.
 \item Si elle ne contient pas d'informations ($0$) et conditionnellement au contraintes $c_i^{(k)}, k\in\{1,2\}$, on énumère les possibilités sous forme disjonctive.
 \end{enumerate}
 On effectue de même par colonne et relativement aux contraintes de la colonne.\\
 
-L'énumération des cas possibles se formule naturellement à l'aide de la disjonction exclusive (XOR ou $\oplus$), à chaque étape, il convient de la traduire en forme normale conjonctive (FNC).
-$$ a\oplus b \equiv (a \wedge \lnot b)\vee(\lnot a \wedge b) \equiv (a\vee b)\wedge\lnot(a\wedge b)$$
-\begin{displaymath}
-\begin{array}{c|c|c|c|c}
-   a
- & b
- & a \oplus b
- & (a\land{}\lnot{}b)\lor{}(\lnot{}a\land{}b)
-  & (a\lor{}b)\land{}\lnot{}(a\land{}b) \\
-\hline
-0 & 0 & 0 & 0 & 0 \\
-0 & 1 & 1 & 1 & 1 \\
-1 & 0 & 1 & 1 & 1 \\
-1 & 1 & 0 & 0 & 0 \\
 
-\end{array}
-\end{displaymath}
+%L'énumération des cas possibles se formule naturellement à l'aide de la disjonction exclusive (XOR ou $\oplus$), à chaque étape, il convient de la traduire en forme normale conjonctive (FNC).
+%$$ a\oplus b \equiv (a \wedge \lnot b)\vee(\lnot a \wedge b) \equiv (a\vee b)\wedge\lnot(a\wedge b)$$
+%\begin{displaymath}
+%\begin{array}{c|c|c|c|c}
+%   a
+% & b
+% & a \oplus b
+% & (a\land{}\lnot{}b)\lor{}(\lnot{}a\land{}b)
+%  & (a\lor{}b)\land{}\lnot{}(a\land{}b) \\
+%\hline
+%0 & 0 & 0 & 0 & 0 \\
+%0 & 1 & 1 & 1 & 1 \\
+%1 & 0 & 1 & 1 & 1 \\
+%1 & 1 & 0 & 0 & 0 \\
+%
+%\end{array}
+%\end{displaymath}
 
 
 \begin{algorithm}
-\caption{Énumération selon les contraintes de lignes et de colonnes}
+\caption{Énumération selon la valeur de(s) bande(s) de chaque lignes}
 \begin{algorithmic}
-\For{ligne $i \to n$}\Comment{contraintes de lignes}
-		\For{colonne $j \to n$}
+\For{ligne $i \to n$}
+		\For{colonne $j \to n$} \Comment{encodage de l'information connue}
 			\If{$x_{i,j} == \bot$}
 				\State Créer une nouvelle $clause$ avec $-x_{i,j}$
+				\State \textbf{break}
 			\ElsIf{$x_{i,j} == \top$}
 				\State Créer une nouvelle $clause$ avec $x_{i,j}$
-			\ElsIf {$x_{i,j}==0$}
-				\If{$\not\exists \; clause_i$}
-				 \State Créer $clause_i$
-				\EndIf
-				\State	Ajouter ($\vee$) $x_{i,j}$ à la $clause_i$ 
+				\State \textbf{break}
 			\EndIf
-		\State Joindre ($\wedge$) les $clauses$
 		\EndFor
-		\If{$\exists \; clause_i$}
-			\State Joindre ($\wedge$) la $clause_i$
-		\EndIf
-\EndFor
-
-\For{colonne $j \to n$}	\Comment{contraintes de colonnes}
-		\For{ligne $i \to n$}
-			\If{$x_{i,j}==\bot$}
-				\State Créer une nouvelle $clause$ avec $-x_{i,j}$
-			\ElsIf{$x_{i,j}==\top$}
-				\State Créer une nouvelle $clause$ avec $x_{i,j}$
-			\ElsIf{$x_{i,j}==0$}
-				\If{$\not\exists \; clause_j$}
-				 \State Créer $clause_j$
-				\EndIf
-				\State	Ajouter ($\vee$) $x_{i,j}$ à la $clause_j$ 
+		\For{colonne $j \to n$} \Comment{application de la contrainte 1}
+			\If{$\not\exists \; clause_i$}
+				\State Créer $clause_i$
 			\EndIf
-		\State Joindre ($\wedge$) les $clauses$
+			Ajouter $x_{i,j}$ à $clause_i$ 
 		\EndFor
-		\If{$\exists \; clause_j$}
-			\State Joindre ($\wedge$) la $clause_j$
-		\EndIf
+		\If{nombre de $bandes == 1$}
+			\If{$bande_i$==0} \Comment{si la taille de la bande est 0}
+				\For{colonne $j \to n$} 
+					\State	Créer une nouvelle $clause$ avec $\lnot x_{i,j} $
+				\EndFor
+	
+			\ElsIf{$bande_i$==1} \Comment{si la taille de la bande est 1}
+			\State $J=\{0,1,2\}$
+				\For{colonne $j'' \to n$}
+					\State $j=min(J\setminus j'')$
+					\State $j'=max(J\setminus j'')$ 
+					\State Créer une nouvelle $clause$ avec $(\lnot x_{i,j}\vee \lnot x_{i,j'} \vee x_{i,j''} )$ 
+				\EndFor
+							
+			\ElsIf{$bande_i$==2} \Comment{si la taille de la bande est 2}
+				\State Joindre la FNC $(\lnot x_{i,0} \vee \lnot x_{i,2}) \wedge (x_{i,0} \vee x_{i,2}) \wedge x_{i,1}$
+							
+			\ElsIf{$bande_i$==3} \Comment{si la taille de la bande est 3}
+				\For{colonne $j \to n$} 
+							\State Créer une nouvelle $clause$ avec $x_{i,j}$
+				\EndFor
+							
+			\EndIf
+		\ElsIf{nombre de $bandes == 2$}
+			\State Créer une nouvelle $clause$ avec $(x_{i,0} \vee \lnot x_{i,1} \vee x_{i,2})$
+		\EndIf			 
+		\State Joindre ($\wedge$) toutes les $clauses$
 \EndFor
 \end{algorithmic}
 \end{algorithm}
