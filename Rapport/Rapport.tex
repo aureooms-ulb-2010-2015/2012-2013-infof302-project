@@ -134,8 +134,8 @@ Chaque case est représentée par une variable $x$, de sorte que la case à la $
 
 On a que $(i,j)\in \{1,2,3\}^2$ et que chaque variable peut prendre comme valeur $v \in \{-1,0,1\}$
 soit:
-$$X=\{x_{i,j}| (i,j)\in \{0,1,2\}^2, v \in \{-1,0,1\}\}$$\\
-
+$$X=\{x_{i,j}| (i,j)\in \{0,1,2\}^2, v \in \{-1,0,1\}\}$$
+\subsection{Sémantique}
 On a pour sémantique: 
 \begin{itemize}
 \item $x_{i,j}$ est \textbf{vrai} \textit{si et seulement si} la case $(i,j)$ a pour valeur $v=1$
@@ -343,13 +343,15 @@ Une suite de cases noires représente une \textit{bande}.
 
 Une bande appartient à une ligne ou colonne et commence à une position donnée. Comme il peut y avoir plusieurs bandes sur une même ligne ou colonne, chaque bande doit être identifiable.\\
 
+\subsection{Variables}
+
 On représente une bande par $$LBande_{pos,ID,start}$$
 où,
 \begin{description}
 \item[L|C] précise s'il s'agit d'une ligne ou d'une colonne.
-\item[pos] désigne le numéro de la ligne ou la colonne où est située la bande.
-\item[ID] désigne, s'il existe plusieurs bandes sur la ligne ou colonne, la bande que l'on considère.
-\item[start] désigne le numéro de colonne ou ligne à partir de laquelle commence la bande.\\
+\item[\textit{pos}] désigne le numéro de la ligne ou la colonne où est située la bande.
+\item[\textit{ID}] désigne, s'il existe plusieurs bandes sur la ligne ou colonne, la bande que l'on considère.
+\item[\textit{start}] désigne le numéro de colonne ou ligne à partir de laquelle commence la bande.\\
 \end{description}
 
 On défini deux fonctions donnant la longueur d'une bande:
@@ -357,6 +359,15 @@ On défini deux fonctions donnant la longueur d'une bande:
 \item[$\mathtt{L}(pos,ID)$] donnant la longueur de la $ID^{eme}$ bande à la ligne $pos$.
 \item[$\mathtt{C}(pos,ID)$] donnant la longueur de la $ID^{eme}$ bande à la colonne $pos$.\\
 \end{description} 
+
+\subsection{Sémantique}
+On définit pour sémantique, dans le cas d'une ligne (raisonnement équivalent pour chaque colonne):
+\begin{equation}
+\begin{array}[b]{c}
+      LBande_{pos,ID,start} = \top \iff (x_{pos,j}=\top)\wedge (x_{pos,j+1}=\bot)\\
+	\forall j \in [start,start+\delta],\;\delta = \mathtt{L}(pos,ID)      
+\end{array}
+\end{equation}
 
 \begin{table}[H]
    \centering
@@ -371,15 +382,22 @@ On défini deux fonctions donnant la longueur d'une bande:
 	\end{tabular}
 \caption{\label{Grille3X3} Grille $3\times3$}
 \end{table}
-On aura pour la grille \ref{Grille3X3}:
-$$\mathtt{LBande}_{3,1,2} = \top$$
-$$L(3,2) = 2$$
-et\\
-$$x_{3,j} = \top, \forall j \in [3,2+\mathtt{L}(3,2)]$$
-$$\wedge$$
-$$x_{3,2+\mathtt{L}(3,2)+1} = \bot  $$
-\subsection{Variables}
+
+Par exemple, on aura pour la grille \ref{Grille3X3}:\\
+
+$\mathtt{LBande}_{3,1,2} = \top$, sachant $L(3,2) = 2$ 
+
+et
+
+$x_{3,j} = \top$, pour tout $j$ dans l'intervalle $ [3,2+\mathtt{L}(3,2)]$
+
+et
+
+$x_{3,2+\mathtt{L}(3,2)+1} = \bot  $
+
 \subsection{Contraintes}
+
+
 \subsection{Codage}
 \section{Représentation par bandes}
 \subsection{Observation: position minimale, maximale et sous-espace}
