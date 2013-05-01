@@ -171,15 +171,74 @@ Cela donne au cas par cas:
 		\begin{enumerate}
 			\item Pour toutes lignes $i$ où $b=3$, 
 			$$\bigwedge_{j\in\{0,1,2\}}\left( \bigvee_{l=1}^{n=1} x_{i,j} \right)$$
+			\begin{center}						
+			\begin{tabular}{|c|c|c|}
+			\hline 
+			$\top$ & $\top$  & $\top$  \\ 
+			\hline  
+			\end{tabular}
+			\end{center}
+
 			\item Pour toutes lignes $i$ où $b=2$, 
 			$$(\lnot x_{i,0} \vee \lnot x_{i,2}) \wedge (x_{i,0} \vee x_{i,2}) \wedge x_{i,1}$$
+			\begin{center}						
+			\begin{tabular}{|c|c|c|}
+			\hline 
+			$\top$ & $\top$  & $\bot$  \\ 
+			\hline  
+			\end{tabular}
+			ou
+			\begin{tabular}{|c|c|c|}
+			\hline 
+			$\bot$ & $\top$  & $\top$  \\ 
+			\hline  
+			\end{tabular}
+			\end{center}
+			
 			\item Pour toutes lignes $i$ où $b=1$, 
 			$$\bigwedge_{\stackrel{j,j' \in\{0,1,2\}}{j<j', j''\neq j,j'}} (\lnot x_{i,j}\vee \lnot x_{i,j'} \vee x_{i,j''} ) $$
+			\begin{center}						
+			\begin{tabular}{|c|c|c|}
+			\hline 
+			$\top$ & $\bot$  & $\bot$  \\ 
+			\hline  
+			\end{tabular}
+			ou
+			\begin{tabular}{|c|c|c|}
+			\hline 
+			$\bot$ & $\top$  & $\bot$  \\ 
+			\hline  
+			\end{tabular}
+			ou
+			\begin{tabular}{|c|c|c|}
+			\hline 
+			$\bot$ & $\bot$  & $\top$  \\ 
+			\hline  
+			\end{tabular}
+			\end{center}
+			
 			\item Pour toutes lignes $i$ où $b=0$,
 			$$\bigwedge_{j\in\{0,1,2\}}\left( \bigvee_{l=1}^{n=1} \lnot x_{i,j} \right)$$
+			\begin{center}						
+			\begin{tabular}{|c|c|c|}
+			\hline 
+			$\bot$ & $\bot$  & $\bot$  \\ 
+			\hline  
+			\end{tabular}
+			\end{center}
+			
 		\end{enumerate}
+
 		\item Deux bandes, pour toutes lignes $i$:
 		$$\left( \bigvee_{l=1}^{n=1} x_{i,0} \right) \wedge \left(\bigvee_{l=1}^{n=1} \lnot x_{i,1}\right) \wedge \left(\bigvee_{l=1}^{n=1} x_{i,2}\right)$$
+			\begin{center}						
+			\begin{tabular}{|c|c|c|}
+			\hline 
+			$\top$ & $\bot$  & $\top$  \\ 
+			\hline  
+			\end{tabular}
+			\end{center}
+			
 	\end{enumerate}
 	Idem pour toutes colonnes. 
 \end{enumerate}
@@ -232,30 +291,28 @@ On effectue de même par colonne et relativement aux contraintes de la colonne.\
 \caption{Énumération selon la valeur de(s) bande(s) de chaque lignes}
 \begin{algorithmic}
 \For{ligne $i \to n$}
-		\For{colonne $j \to n$} \Comment{encodage de l'information connue}
+		\For{colonne $j \to 2$} \Comment{encodage de l'information connue}
 			\If{$x_{i,j} == \bot$}
 				\State Créer une nouvelle $clause$ avec $-x_{i,j}$
-				\State \textbf{break}
 			\ElsIf{$x_{i,j} == \top$}
 				\State Créer une nouvelle $clause$ avec $x_{i,j}$
-				\State \textbf{break}
 			\EndIf
 		\EndFor
-		\For{colonne $j \to n$} \Comment{application de la contrainte 1}
+		\For{colonne $j \to 2$} \Comment{application de la contrainte 1}
 			\If{$\not\exists \; clause_i$}
 				\State Créer $clause_i$
 			\EndIf
-			Ajouter $x_{i,j}$ à $clause_i$ 
+			\State Ajouter $x_{i,j}$ à $clause_i$ 
 		\EndFor
 		\If{nombre de $bandes == 1$}
 			\If{$bande_i$==0} \Comment{si la taille de la bande est 0}
-				\For{colonne $j \to n$} 
+				\For{colonne $j \to 2$} 
 					\State	Créer une nouvelle $clause$ avec $\lnot x_{i,j} $
 				\EndFor
 	
 			\ElsIf{$bande_i$==1} \Comment{si la taille de la bande est 1}
 			\State $J=\{0,1,2\}$
-				\For{colonne $j'' \to n$}
+				\For{colonne $j'' \to 2$}
 					\State $j=min(J\setminus j'')$
 					\State $j'=max(J\setminus j'')$ 
 					\State Créer une nouvelle $clause$ avec $(\lnot x_{i,j}\vee \lnot x_{i,j'} \vee x_{i,j''} )$ 
@@ -265,7 +322,7 @@ On effectue de même par colonne et relativement aux contraintes de la colonne.\
 				\State Joindre la FNC $(\lnot x_{i,0} \vee \lnot x_{i,2}) \wedge (x_{i,0} \vee x_{i,2}) \wedge x_{i,1}$
 							
 			\ElsIf{$bande_i$==3} \Comment{si la taille de la bande est 3}
-				\For{colonne $j \to n$} 
+				\For{colonne $j \to 2$} 
 							\State Créer une nouvelle $clause$ avec $x_{i,j}$
 				\EndFor
 							
