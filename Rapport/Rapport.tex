@@ -18,6 +18,9 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{array}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
 \linespread{1.1}
 %%%%%%%%%%%%%%%%%
 \makeatletter
@@ -142,7 +145,17 @@ On a pour sémantique:
 \item $x_{i,j}$ est \textbf{faux} \textit{si et seulement si} la case $(i,j)$ a pour valeur $v=-1$
 \end{itemize}
 
-\subsection{Contraintes}
+\subsection{Codage}
+Pour miniSAT, il faut coder les propositions par des entiers.
+
+
+La taille d'une grille est de $3\times3$, on codera en base 3.
+
+
+Pour ($i$,$j$,$v$) on aura le codage: $(i \times n²)+(j \times n)+(v+1)$
+
+
+\section{Contraintes}
 \begin{enumerate}
 
 \item (trivial) \textbf{Pour chaque} ligne, s'il existe une bande, \textbf{toutes} les cases ne sont pas fausses.
@@ -242,16 +255,6 @@ Cela donne au cas par cas:
 	\end{enumerate}
 	Idem pour toutes colonnes. 
 \end{enumerate}
-
-\subsection{Codage}
-Pour miniSAT, il faut coder les propositions par des entiers.
-
-
-La taille d'une grille est de $3\times3$, on codera en base 3.
-
-
-Pour ($i$,$j$,$v$) on aura le codage: $(i \times n²)+(j \times n)+(v+1)$
-
 
 \section{Parcours et représentation par énumération}
 
@@ -395,10 +398,244 @@ et
 
 $x_{3,2+\mathtt{L}(3,2)+1} = \bot  $
 
-\subsection{Contraintes}
-
+où $x_{pos,j+1}$ donne $\bot$ que ce soit parce qu'il existe une case vide ou parce qu'on excède la taille de la grille.
 
 \subsection{Codage}
+
+\section{Contraintes}
+
+Selon la définition donnée d'une bande, la donnée décisive est la valeur du paramètre $start$. 
+
+\begin{enumerate}
+\item Une bande est contenue dans la grille ou dans l'espace délimité par la bande suivante.
+	$$max(start_k) =
+	\begin{cases} 
+		 start_{k+1}-\mathtt{L}(pos,ID_k)-1, &\text{si } ID > 1\\
+		 n - \mathtt{L}(pos,ID_k), & \text{sinon}
+	\end{cases}
+	$$
+	où,
+		\begin{itemize}
+		\item[] $n$ est la taille de la grille
+		\item[] $ID_k$ est la $k^{eme}$ bande
+		\item[] $k=\{0,...,b\}$
+		\item[] $b$ est le nombre de bandes sur la ligne/colonne, $b=\sum ID$		
+		\item[] $start_k$ est la position de départ de la bande avec $ID_k$.
+		\end{itemize}
+\item Deux bandes de la même ligne/colonne ne peuvent se superposer.
+$$ min(start_k) = 
+	\begin{cases} 
+		start_{k-1}+\mathtt{L}(pos,ID_{k-1})+1, &\text{si } ID > 1 \\
+		0, & \text{sinon} 
+	\end{cases}
+$$
+où,
+		\begin{itemize}
+		\item[] $ID_k$ est la $k^{eme}$ bande
+		\item[] $k=\{0,...,b\}$
+		\item[] $b$ est le nombre de bandes sur la ligne/colonne, $b=\sum ID$	
+		\item[] $start_k$ est la position de départ de la bande avec $ID_k$.
+		\end{itemize}
+		
+	
+\item \textbf{Pour toutes} bandes différentes appartenant à la même ligne/colonne, \textbf{il existe} \textit{au moins} $v$ cases vides:\\
+où, $v$ se donne comme:
+	\begin{itemize}
+		\item[]	Soit $b$, le nombre de bandes sur une ligne, $b=\sum ID$\\
+		Soit $v$, le nombre de cases vides,\\
+		alors $min(v )= b-1$\\
+	\end{itemize}
+
+	Ce qui peut se traduire comme, pour toutes lignes $i$,
+			$$\bigwedge_{k\in\{0,\cdots,b\}}\left( 
+				\bigvee_{\delta=\{0,\cdots,max(start_{k+1})-min(start_k)\}} \lnot x_{i,j+\delta} 
+			\right)$$
+	Ou encore, 		
+			$$\bigwedge_{k\in\{0,\cdots,b\}}\left(
+				\bigvee_{
+					\stackrel{j=\{min(start_k), \cdots,j'-1\}}{j'=\{j+1, \cdots,max(start_k+1)\}}
+					}
+				\lnot x_{i,j'-j} 
+			\right)$$
+	Intuitivement, il s'agit de cerner les cases vides plausibles entre deux bandes:		
+			\begin{center}						
+			\begin{tabular}{|c|c|c|c|c|c|}
+			\hline 
+			\black &   &    &   & \black & \black   \\ 			
+			\hline 
+			$\top$ & $\bot$ & $\bot$  & $\bot$ & $\top$ & $\top$ \\ 
+			\hline  
+			$\uparrow j$ & \multicolumn{3}{c|}{} & $\uparrow j'$ & \\ 
+			\hline
+			\end{tabular}
+			\end{center}
+\end{enumerate}
+
+\subsection{Une bande}
+Le cas où il n'y a qu'une bande peut être vu comme la contraintes des possibles positions d'une bande relativement à un espace donné disponible. 
+
+Cette interprétation permet alors de réutiliser le cas "une bande" comme sous problème résoluble du cas de multiples bandes. 
+
+Soit l'exemple suivant:
+
+\begin{table}[H]
+    \begin{subtable}[B]{0.5\textwidth}
+    \centering
+		\begin{tabular}{|c|c|c|c|c|}
+			\hline
+			\black $\top$ & \black $\top$  & \color{white}$\top$ & \color{white}$\top$ & \color{white}$\top$ \\ 			
+			\hline
+		\end{tabular}
+		
+		\begin{tabular}{|c|c|c|c|c|}
+		\hline
+		\color{white}$\top$ & \black $\top$ & \black $\top$  & \color{white}$\top$ & \color{white}$\top$ \\ 			
+		\hline
+		\end{tabular}	
+		
+		\begin{tabular}{|c|c|c|c|c|}
+		\hline
+		 \color{white}$\top$ & \color{white}$\top$ & \black $\top$ & \black $\top$  & \color{white}$\top$ \\ 			
+		\hline
+		\end{tabular}
+		
+		\begin{tabular}{|c|c|c|c|c|}
+		\hline
+		 \color{white}$\top$ &  \color{white}$\top$ & \color{white}$\top$ & \black $\top$ & \black $\top$ \\ 			
+		\hline
+		\end{tabular}
+			
+        \caption{Positions d'une bande 2 dans un espace 5}
+        \label{table:exempleUneBande}
+    \end{subtable}
+    ~
+    \begin{subtable}[B]{0.5\textwidth}
+        \centering
+			\begin{tabular}{|c|c|c|c|c|}
+			\hline 
+			\grey $\top$ & $\bot$ & $\bot$  & $\bot$ & $\bot$ \\ 
+			\hline
+			\end{tabular}
+			
+			\begin{tabular}{|c|c|c|c|c|}
+			\hline 
+			$\bot$ & \grey $\top$ & $\bot$  & $\bot$ & $\bot$ \\ 
+			\hline
+			\end{tabular}
+			
+			\begin{tabular}{|c|c|c|c|c|}
+			\hline 
+			$\bot$ & $\bot$ & \grey $\top$  & $\bot$ & $\bot$ \\ 
+			\hline
+			\end{tabular}
+
+			\begin{tabular}{|c|c|c|c|c|}
+			\hline 
+			$\bot$ & $\bot$ & $\bot$ & \grey $\top$ & $\bot$\\ 
+			\hline
+			\end{tabular}
+			
+        \caption{Positions $start$ possibles}
+        \label{table:PosPossible}
+    \end{subtable}
+\end{table}
+
+Dans la table \ref{table:exempleUneBande}, on représente les différentes façons dont se positionne une bande de taille 2 dans un espace de taille 5, on y voit 4 possibilités.\\
+On ne considère en réalité que la position de $start$ à laquelle commence la bande. Ce que décrit la table \ref{table:PosPossible}, on s'aperçoit que $start$ ne prendra jamais comme position la dernière colonne, ce dans tout les cas possibles de l'exemple. 
+
+\begin{table}[H]
+        \begin{subtable}[B]{0.5\textwidth}
+        \centering
+			\begin{tabular}{|c|c|c|c||c|}
+			\hline 
+			\color{white}$\lnot$\color{black}$a$ & $\lnot b$ & $\lnot c$  & $\lnot d$ & $\lnot e$ \\ 
+			\hline
+			\end{tabular}
+			
+			\begin{tabular}{|c|c|c|c||c|}
+			\hline 
+			$\lnot a$ & \color{white}$\lnot$\color{black}$b$ & $\lnot c$  & $\lnot d$ & $\lnot e$ \\ 
+			\hline
+			\end{tabular}
+			
+			\begin{tabular}{|c|c|c|c||c|}
+			\hline 
+			$\lnot a$ & $\lnot b$ & \color{white}$\lnot$\color{black}$c$  & $\lnot d$ & $\lnot e$ \\ 
+			\hline
+			\end{tabular}
+
+			\begin{tabular}{|c|c|c|c||c|}
+			\hline 
+			$\lnot a$ & $\lnot b$ & $\lnot c$  & \color{white}$\lnot$\color{black}$d$ & $\lnot e$ \\ 
+			\hline
+			\end{tabular}
+
+			\begin{tabular}{|c c c c c|}
+			\hline 
+			\multicolumn{4}{|c||}{$a \oplus b \oplus c \oplus d$} & $\wedge \lnot e$ \\ 
+			\hline
+			\end{tabular}			
+        \caption{Positions $start$ possibles}
+        \label{table:posXor}
+    \end{subtable}
+    ~
+	    \begin{subtable}[B]{0.5\textwidth}
+        \centering
+			\begin{tabular}{|c|c|c|c||c|c|}
+			\hline 
+			\grey \color{gray}$\lnot$\color{white}$a$ & \black \color{white}$\lnot b$ &
+			\black \color{white}$\lnot c$  & $\lnot d$ & $\lnot e$ & $\lnot f$\\ 
+			\hline
+			\end{tabular}
+			
+			\begin{tabular}{|c|c|c|c||c|c|}
+			\hline 
+			$\lnot a$ & \grey \color{gray}$\lnot$\color{white}$b$ & \black \color{white}$\lnot c$ &
+			\black \color{white}$\lnot d$  & $\lnot e$ & $\lnot f$\\ 
+			\hline
+			\end{tabular}
+			
+			\begin{tabular}{|c|c|c|c||c|c|}
+			\hline 
+			$\lnot a$ & $\lnot b$ &\grey \color{gray}$\lnot$\color{white}$c$ & 
+			\black \color{white}$\lnot d$ &\black \color{white}$\lnot e$  & $\lnot f$\\ 
+			\hline
+			\end{tabular}
+
+			\begin{tabular}{|c|c|c|c||c|c|}
+			\hline 
+			$\lnot a$ & $\lnot b$ & $\lnot c$  &\grey \color{gray}$\lnot$\color{white}$d$ & 
+			\black \color{white}$\lnot e$ &\black \color{white}$\lnot f$  \\ 
+			\hline
+			\end{tabular}
+
+			\begin{tabular}{|c c c c c c|}
+			\hline 
+			\multicolumn{4}{|c||}{$a \oplus b \oplus c \oplus d$} & \multicolumn{2}{c|}{$\wedge \lnot e \wedge \lnot f$} \\ 
+			\hline
+			\end{tabular}			
+			
+        \caption{Bande 3 dans espace 5}
+        \label{table:tailleE}
+    \end{subtable}
+\end{table}
+
+On peut tenter une première approche, soit les cases $a$, $b$, $c$, $d$, pouvant potentiellement être la cas $start$ et la case $e$ qui ne le sera jamais. \\
+On a alors, sur la table \ref{table:posXor}: "Soit $a$ ou soit $b$ ou soit $c$ ou soit $d$ et pas $e$", c'est-à-dire $(a \oplus b \oplus c \oplus d) \wedge e$ où $\oplus$ représente le \textit{ou exclusif}.\\
+
+En excluant la dernière colonne, on obtient une matrice carrée dont la diagonale présente toutes les positions acceptables. \\
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.3]{generationFNC.png}
+\caption{Génération de clauses}
+\label{fig:generationFNC}
+\end{figure}
+
+Pour cette matrice il est possible de formuler la contrainte en forme normale conjonctive suivante:
+$$ (a \vee b \vee c \vee d ) \wedge (\lnot a \vee \lnot b) \wedge (\lnot a \vee \lnot c) \wedge (\lnot a \vee \lnot d)\wedge (\lnot b \vee \lnot c) \wedge (\lnot b \vee \lnot d)\wedge (\lnot c \vee \lnot d)$$   
+À quoi, on ajoutera la clause unaire $\lnot e$.
+	
+
 \section{Représentation par bandes}
 \subsection{Observation: position minimale, maximale et sous-espace}
 
@@ -420,11 +657,11 @@ Dans l'exemple, on obtient:
 \centering
 \begin{tabular}{|l||c|c|c|}
 \hline 
-0&\black• &  &  \\ 
+0&\black • &  &  \\ 
 \hline 
 1 & &  &  \\ 
 \hline 
-2 & \grey &  & \black• \\ 
+2 & \grey &  & \black • \\ 
 \hline 
 3&\grey &  & \\ 
 \hline 
