@@ -472,12 +472,9 @@ où, $v$ se donne comme:
 \end{enumerate}
 
 \subsection{Une bande}
-Le cas où il n'y a qu'une bande peut être vu comme la contraintes des possibles positions d'une bande relativement à un espace donné disponible. 
-
-Cette interprétation permet alors de réutiliser le cas "une bande" comme sous problème résoluble du cas de multiples bandes. 
-
+Le cas où il n'y a qu'une bande peut être vu comme la contraintes des possibles positions d'une bande relativement à un espace donné disponible.\\
+Cette interprétation permet alors de réutiliser le cas "une bande" comme sous problème résoluble du cas de multiples bandes.
 Soit l'exemple suivant:
-
 \begin{table}[H]
     \begin{subtable}[B]{0.5\textwidth}
     \centering
@@ -541,6 +538,12 @@ Soit l'exemple suivant:
 \end{table}
 
 Dans la table \ref{table:exempleUneBande}, on représente les différentes façons dont se positionne une bande de taille 2 dans un espace de taille 5, on y voit 4 possibilités.\\
+Le nombre de possibilités est donné relativement à la taille de l'espace dans lequel se positionne la bande et la taile de cette dernière:
+$$n-\mathtt{L}(pos,ID)+1$$
+où,
+\begin{itemize}
+\item[] $n$ est la taille de l'espace considéré.\\
+\end{itemize}
 On ne considère en réalité que la position de $start$ à laquelle commence la bande. Ce que décrit la table \ref{table:PosPossible}, on s'aperçoit que $start$ ne prendra jamais comme position la dernière colonne, ce dans tout les cas possibles de l'exemple. 
 
 \begin{table}[H]
