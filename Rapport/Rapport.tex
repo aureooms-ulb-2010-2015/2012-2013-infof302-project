@@ -538,13 +538,14 @@ Soit l'exemple suivant:
 \end{table}
 
 Dans la table \ref{table:exempleUneBande}, on représente les différentes façons dont se positionne une bande de taille 2 dans un espace de taille 5, on y voit 4 possibilités.\\
-Le nombre de possibilités est donné relativement à la taille de l'espace dans lequel se positionne la bande et la taile de cette dernière:
-$$n-\mathtt{L}(pos,ID)+1$$
+Le nombre de possibilités $p$ est donné relativement à la taille de l'espace $n$ dans lequel se positionne la bande et la taille de cette dernière:
+$$p = n-\mathtt{L}(pos,ID)+1$$
 où,
 \begin{itemize}
+\item[] $p$ est le nombre de position possible.
 \item[] $n$ est la taille de l'espace considéré.\\
 \end{itemize}
-On ne considère en réalité que la position de $start$ à laquelle commence la bande. Ce que décrit la table \ref{table:PosPossible}, on s'aperçoit que $start$ ne prendra jamais comme position la dernière colonne, ce dans tout les cas possibles de l'exemple. 
+On ne considère en réalité que la position de $start$ à laquelle commence la bande. Ce que décrit la table \ref{table:PosPossible}, on s'aperçoit que $start$ ne prendra jamais comme position la dernière colonne, ce dans tous les cas possibles de l'exemple. 
 
 \begin{table}[H]
         \begin{subtable}[B]{0.5\textwidth}
@@ -626,7 +627,9 @@ On ne considère en réalité que la position de $start$ à laquelle commence la
 On peut tenter une première approche, soit les cases $a$, $b$, $c$, $d$, pouvant potentiellement être la case $start$ et la case $e$ qui ne le sera jamais. \\
 On a alors, sur la table \ref{table:posXor}: "Soit $a$ ou soit $b$ ou soit $c$ ou soit $d$ et pas $e$", c'est-à-dire $(a \oplus b \oplus c \oplus d) \wedge e$ où $\oplus$ représente le \textit{ou exclusif}.\\
 
-En excluant la dernière colonne, on obtient une matrice carrée dont la diagonale présente toutes les positions acceptables. \\
+En excluant la dernière colonne, on obtient une matrice carrée dont la diagonale présente toutes les positions acceptables. 
+
+La taille de la matrice correspond au nombre des positions possibles $n-\mathtt{L}(pos,ID)+1$\\
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.3]{generationFNC.png}
@@ -641,9 +644,22 @@ $$ (a \vee b \vee c \vee d ) \wedge (\lnot a \vee \lnot b) \wedge (\lnot a \vee 
 Il est également à remarquer, comme sur la table \ref{table:tailleE}, que le nombre de clause représentant le nombre de colonne qui ne pourront jamais être une position $start$, est égal à:
 \begin{itemize}
 \item[]$\mathtt{L}(pos,ID) - 1$ pour une ligne 
-\item[]$\mathtt{C}(pos,ID)-1$ pour une colonne
-\end{itemize}  
-	
+\item[]$\mathtt{C}(pos,ID)-1$ pour une colonne\\
+\end{itemize}
+
+Suite à ce qui précède, on obtient en concaténant les observations, la formulation suivante:\\
+\textbf{Pour toutes} lignes $i$, selon un espace $n$ défini,
+$$
+\left( \bigvee_{ j \in \{	0,...,p\} } LB_{i,ID,j} \right)
+\bigwedge_{\stackrel{j,j' \in \{0,\cdots,n\}}{j\leq j'}} (\lnot LB_{i,ID,j} \vee \lnot LB_{i,ID,j'})
+\bigwedge_{j \in {p,\cdots,n}}\left(\bigvee_{k=1}^{n=1}\lnot LB_{i,ID,j}\right)
+$$  
+où,
+\begin{itemize}
+\item[]$p = n-\mathtt{L}(pos,ID)+1$, soit le nombre de positions possibles
+\item[]$n$ est l'espace disponible
+\item[]$LB_{i,ID,j} \equiv LBande_{pos,ID,start}$
+\end{itemize}	
 
 \section{Représentation par bandes}
 \subsection{Observation: position minimale, maximale et sous-espace}
