@@ -620,7 +620,7 @@ On ne considère en réalité que la position de $start$ à laquelle commence la
     \end{subtable}
 \end{table}
 
-On peut tenter une première approche, soit les cases $a$, $b$, $c$, $d$, pouvant potentiellement être la cas $start$ et la case $e$ qui ne le sera jamais. \\
+On peut tenter une première approche, soit les cases $a$, $b$, $c$, $d$, pouvant potentiellement être la case $start$ et la case $e$ qui ne le sera jamais. \\
 On a alors, sur la table \ref{table:posXor}: "Soit $a$ ou soit $b$ ou soit $c$ ou soit $d$ et pas $e$", c'est-à-dire $(a \oplus b \oplus c \oplus d) \wedge e$ où $\oplus$ représente le \textit{ou exclusif}.\\
 
 En excluant la dernière colonne, on obtient une matrice carrée dont la diagonale présente toutes les positions acceptables. \\
@@ -631,9 +631,15 @@ En excluant la dernière colonne, on obtient une matrice carrée dont la diagona
 \label{fig:generationFNC}
 \end{figure}
 
-Pour cette matrice il est possible de formuler la contrainte en forme normale conjonctive suivante:
+Pour cette matrice, il est possible de formuler la contrainte en forme normale conjonctive suivante:
 $$ (a \vee b \vee c \vee d ) \wedge (\lnot a \vee \lnot b) \wedge (\lnot a \vee \lnot c) \wedge (\lnot a \vee \lnot d)\wedge (\lnot b \vee \lnot c) \wedge (\lnot b \vee \lnot d)\wedge (\lnot c \vee \lnot d)$$   
-À quoi, on ajoutera la clause unaire $\lnot e$.
+À quoi, on ajoutera la clause unaire $\lnot e$.\\
+
+Il est également à remarquer, comme sur la table \ref{table:tailleE}, que le nombre de clause représentant le nombre de colonne qui ne pourront jamais être une position $start$, est égal à:
+\begin{itemize}
+\item[]$\mathtt{L}(pos,ID) - 1$ pour une ligne 
+\item[]$\mathtt{C}(pos,ID)-1$ pour une colonne
+\end{itemize}  
 	
 
 \section{Représentation par bandes}
