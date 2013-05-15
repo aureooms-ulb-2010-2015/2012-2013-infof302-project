@@ -6,16 +6,7 @@
 
 int main(/*int argn,char ** args*/){
 
-	std::vector<std::vector<char>>& table = Utils::MINES_SWEEPER_3;
-
-	Utils::print(table);
-
-	ClausesGenerator generator;
-
-	std::vector<std::vector<int>> clauses = generator.run(table);
-	
-	Utils::toDIMACS(clauses);
-	std::cout << Utils::toDIMACS(clauses);
+	std::vector<std::vector<int>> clauses;
 
 	Solver solver;
 

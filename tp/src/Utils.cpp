@@ -77,3 +77,11 @@ std::string Utils::toDIMACS(std::vector<std::vector<int>> clauses){
 	return res;
 }
 
+void Utils::print(const std::vector<std::vector<char>>& table){
+	for(size_t i = 0; i < table.size(); ++i){
+		for(size_t j = 0; j < table.front().size(); ++j){
+			std::cout << table[i][j] << " ";
+		}
+		std::cout << "\n";
+	}
+}

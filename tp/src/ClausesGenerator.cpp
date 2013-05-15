@@ -45,8 +45,7 @@ std::vector<std::vector<int>> ClausesGenerator::run(std::vector<std::vector<char
 			}
 			
 			
-			std::vector<std::vector<int>> XORclauses = generateClauses(neighbours, mines);
-			std::vector<std::vector<int>> clauses = translate(XORclauses);
+			std::vector<std::vector<int>> clauses = generateClauses(neighbours, mines);
 			result.insert(result.end(), clauses.begin(), clauses.end());
 		}
 	}
@@ -65,7 +64,7 @@ std::vector<std::vector<int>> ClausesGenerator::generateClauses(std::vector<int>
 }
 
 /*
- * Returns clauses in the form (x1 and !x2 and x3) or (!x1 and x2 and x3) or (x1 and x2 and !x3)
+ * Returns FNC clauses by enumerating non working combinations
  *
  */
 void ClausesGenerator::generateClausesRecursively(std::vector<std::vector<int>>& clauses, std::vector<int> neighbours, int mines, size_t offset){
@@ -76,60 +75,38 @@ void ClausesGenerator::generateClausesRecursively(std::vector<std::vector<int>>&
 		return;
 	}
 
-	//no more mines available
-	
-	
-	if(mines == 0){
-		clauses.back().push_back(-neighbours[offset]);
-		generateClausesRecursively(clauses, neighbours, mines, offset+1);
-		return;
+	//clause is currently a valid one => invalidate it
+	if(offset == neighbours.size()-1){
+		if(mines == 0){ //already 0 mine left => take one
+			clauses.back().push_back(-neighbours[offset]);
+			generateClausesRecursively(clauses, neighbours, mines-1, offset+1);
+			return;
+		}
+		else if(mines == 1){ //1 mine left => leave it
+			clauses.back().push_back(neighbours[offset]);
+			generateClausesRecursively(clauses, neighbours, mines, offset+1);
+			return;
+		}
 	}
-	
 
 	std::vector<int> copy;
 	if(offset + mines <= neighbours.size()){
 		copy = clauses.back();
 	}
 
-	//neighbour is a mine
+	//neighbour is a mine (in a non-valid combination)
 	
-	clauses.back().push_back(neighbours[offset]);
+	clauses.back().push_back(-neighbours[offset]);
 	generateClausesRecursively(clauses, neighbours, mines-1, offset+1);
 	
 	if(offset + mines <= neighbours.size()){
 		clauses.push_back(copy);
 		
-		//neighbour is not a mine
+		//neighbour is not a mine (in a non-valid combination)
 		
-		clauses.back().push_back(-neighbours[offset]);
+		clauses.back().push_back(neighbours[offset]);
 		generateClausesRecursively(clauses, neighbours, mines, offset+1);
 	}
 	
 	return; //MOTHAFUCKA
-}
-
-/*
- * Translate clauses from (x1 and x2 and x3) or (y1 and y2 and y3)
- * to ()
- *
- */
-std::vector<std::vector<int>> ClausesGenerator::translate(std::vector<std::vector<int>> XORclauses){
-	// a xor b == (a or b) and (not a or not b)
-
-	std::vector<std::vector<int>> clauses;
-
-	for(std::vector<int> XORclause : XORclauses){
-		std::vector<int> clause;
-		// TODO translate MOTHAFUCKA
-	}
-
-	return clauses;	
-}
-
-int f(int n){
-	int result = 1;
-	for(int i = 2; i <= n; ++i){
-		result *= i;
-	}
-	return result;
 }
