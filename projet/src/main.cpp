@@ -35,10 +35,10 @@ int main(int argc, char* argv []){
 
 		lbool ret = solver.solve();
 		printer.print(ret);
-		
+
 		Solution solution;
 		SolverTranslator::fromSolver(solver, solution);
-		printer.print(problem);
+		printer.print(solution);
 	}
 	catch(Exception& e){
 		std::cout << e.what() << std::endl;
