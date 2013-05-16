@@ -30,3 +30,7 @@ void PrettyPrinter::print(const Solution& solution){
 		std::cout <<  std::endl;
 	}
 }
+
+void PrettyPrinter::print(const lbool& ret){
+	printf(ret == l_True ? "SATISFIABLE\n" : ret == l_False ? "UNSATISFIABLE\n" : "INDETERMINATE\n");
+}

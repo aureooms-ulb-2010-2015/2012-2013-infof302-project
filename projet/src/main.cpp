@@ -33,9 +33,12 @@ int main(int argc, char* argv []){
 
 		SolverTranslator::toSolver(clauses, solver);
 
-		vec<Lit> dummy;
-		lbool ret = solver.solve(dummy);
-		printf(ret == l_True ? "SATISFIABLE\n" : ret == l_False ? "UNSATISFIABLE\n" : "INDETERMINATE\n");
+		lbool ret = solver.solve();
+		printer.print(ret);
+		
+		Solution solution;
+		SolverTranslator::fromSolver(solver, solution);
+		printer.print(problem);
 	}
 	catch(Exception& e){
 		std::cout << e.what() << std::endl;
