@@ -5,7 +5,7 @@
 
 
 void PrettyPrinter::print(const Problem& problem){
-	std::cout << problem.size << " " << problem.max << std::endl;
+	std::cout << problem.size << " " << problem.tapes << std::endl;
 	for(const std::vector<int>& col : problem.cols){
 		std::copy(col.begin(), col.end(),
 		std::ostream_iterator<int>(std::cout, " "));

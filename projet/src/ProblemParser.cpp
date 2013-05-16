@@ -14,7 +14,7 @@ Problem ProblemParser::parse(const std::string& filename) const{
 	Problem problem;
 
 	this->fill(fs, problem.size, ' ');
-	this->fill(fs, problem.max, '\n');
+	this->fill(fs, problem.tapes, '\n');
 
 	if(problem.size > 0){
 		this->fill(fs, problem.cols, problem.size);
@@ -39,8 +39,8 @@ void ProblemParser::validate(const Problem& problem) const{
 	if(problem.grid.size() < problem.size){
 		throw ProblemParser::Exception("Early eof : could not fill all the grid");
 	}
-	this->validate(problem.cols, problem.max, "Cols", std::greater<size_t>());
-	this->validate(problem.rows, problem.max, "Rows", std::greater<size_t>());
+	this->validate(problem.cols, problem.tapes, "Cols", std::greater<size_t>());
+	this->validate(problem.rows, problem.tapes, "Rows", std::greater<size_t>());
 	this->validate(problem.grid, problem.size, "Grid", std::not_equal_to<size_t>());
 		
 }
