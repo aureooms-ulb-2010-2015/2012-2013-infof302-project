@@ -1,6 +1,7 @@
 #ifndef SOLVER_TRANSLATOR_H
 #define SOLVER_TRANSLATOR_H
 
+#include <vector>
 #include "SolverTypes.h"
 
 class SolverTranslator{
@@ -20,7 +21,6 @@ public:
 			S.addClause(lits);
 		}
 	}
-
 
 };
 
