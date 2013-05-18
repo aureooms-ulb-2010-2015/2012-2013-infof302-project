@@ -150,25 +150,90 @@ FNC ClausesGenerator::generateAllHorizontalClauses(){
 }
 
 
-FNC ClausesGenerator::generateVerticalClause(size_t pos, size_t ID, size_t start){
-	FNC result;
-	return result;
+
+FNC ClausesGenerator::generateVerticalClauseBoxes(size_t pos, size_t ID, size_t start){
+	std::vector<int> lits;
+	for(size_t i = start; i < start + C(pos, ID); ++i){
+		lits.push_back(BOX(i, pos));
+	}
+	if(start + C(pos, ID) < this->_problem->size){
+		lits.push_back(-BOX(start + C(pos, ID), pos));
+	}
+	return this->implies(CBande(pos, ID, start), lits);
 }
+
+FNC ClausesGenerator::generateVerticalClauseAtMostOne(size_t pos, size_t ID, size_t start){
+	std::vector<int> lits;
+	for(size_t i = start + 1; i < this->_problem->size; ++i){
+		lits.push_back(-CBande(pos, ID, i));
+	}
+	return this->implies(CBande(pos, ID, start), lits);
+}
+
 FNC ClausesGenerator::generateVerticalClause(size_t pos, size_t ID){
 	FNC result;
+
+	for(size_t start = 0; start + C(pos, ID) <= this->_problem->size; ++start){
+		FNC fnc = generateVerticalClauseBoxes(pos, ID, start);
+		result.insert(result.end(), fnc.begin(), fnc.end());
+	}
+
+	for(size_t start = this->_problem->size - C(pos, ID) + 1; start < this->_problem->size; ++start){
+		result.push_back({-CBande(pos, ID, start)});
+	}
+
+	Clause atLeastOne;
+	for(size_t start = 0; start < this->_problem->size; ++start){
+		atLeastOne.push_back(CBande(pos, ID, start));
+	}
+	result.push_back(atLeastOne);
+
+	for(size_t start = 0; start < this->_problem->size - 1; ++start){
+		FNC fnc = generateVerticalClauseAtMostOne(pos, ID, start);
+		result.insert(result.end(), fnc.begin(), fnc.end());
+	}
+
 	return result;
 }
 
+FNC ClausesGenerator::generateVerticalClauseOrder(size_t pos, size_t ID, size_t start){
+	std::vector<int> lits;
+	for(size_t i = 0; i <= start + C(pos, ID); ++i){
+		lits.push_back(-CBande(pos, ID+1, i));
+	}
+	return this->implies(CBande(pos, ID, start), lits);
+}
 
+FNC ClausesGenerator::generateVerticalClauseOrder(size_t pos, size_t ID){
+	FNC result;
+	for(size_t start = 0; start + C(pos, ID) <= this->_problem->size; ++start){
+		FNC fnc = generateVerticalClauseOrder(pos, ID, start);
+		result.insert(result.end(), fnc.begin(), fnc.end());		
+	}
+	return result;
+}
 
+FNC ClausesGenerator::generateVerticalClause(size_t pos){
+	FNC result;
+	for(size_t ID = 0; ID < this->_problem->cols.at(pos).size(); ++ID){
+		FNC fnc = generateVerticalClause(pos, ID);
+		result.insert(result.end(), fnc.begin(), fnc.end());		
+	}
 
-
-
-
-
-
-
-
+	for(size_t ID = 0; ID < this->_problem->cols.at(pos).size() - 1; ++ID){
+		FNC fnc = generateVerticalClauseOrder(pos, ID);
+		result.insert(result.end(), fnc.begin(), fnc.end());		
+	}
+	return result;
+}
+FNC ClausesGenerator::generateAllVerticalClauses(){
+	FNC result;
+	for(size_t pos = 0; pos < this->_problem->size; ++pos){
+		FNC fnc = generateVerticalClause(pos);
+		result.insert(result.end(), fnc.begin(), fnc.end());		
+	}
+	return result;
+}
 
 
 

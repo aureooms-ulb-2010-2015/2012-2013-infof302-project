@@ -28,8 +28,13 @@ private:
 	virtual FNC generateHorizontalClause(size_t pos, size_t ID);
 	virtual FNC generateHorizontalClause(size_t pos);
 	virtual FNC generateAllHorizontalClauses();
-	virtual FNC generateVerticalClause(size_t pos, size_t ID, size_t start);
+	virtual FNC generateVerticalClauseAtMostOne(size_t pos, size_t ID, size_t start);
+	virtual FNC generateVerticalClauseBoxes(size_t pos, size_t ID, size_t start);
+	virtual FNC generateVerticalClauseOrder(size_t pos, size_t ID, size_t start);
+	virtual FNC generateVerticalClauseOrder(size_t pos, size_t ID);
 	virtual FNC generateVerticalClause(size_t pos, size_t ID);
+	virtual FNC generateVerticalClause(size_t pos);
+	virtual FNC generateAllVerticalClauses();
 	virtual FNC implies(int condition, std::vector<int> lits);
 	virtual void load(const Problem&);
 
