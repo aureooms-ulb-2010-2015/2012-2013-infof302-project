@@ -63,6 +63,11 @@ order matters:
 	B_k => AND (-C_j) FOR ALL j <= k+1
 
 
+white holes between tapes:
+
+	A_k AND B_j => AND(-x_k) FOR ALL k < x < j FOR ALL j > k
+
+
 \*---------------------------------------------------------------*/
 
 
