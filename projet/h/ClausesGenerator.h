@@ -13,7 +13,9 @@ public:
 	typedef std::vector<Clause> FNC;
 	
 private:
-	Problem* _problem;
+	const Problem* _problem;
+	int _Loffset;
+	int _Coffset;
 
 	virtual FNC generateClauses();
 	virtual int BOX(size_t i, size_t j);

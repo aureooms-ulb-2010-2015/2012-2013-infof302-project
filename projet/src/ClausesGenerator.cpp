@@ -6,12 +6,12 @@ std::vector<std::vector<int>> ClausesGenerator::run(const Problem& problem){
 }
 
 ClausesGenerator::FNC ClausesGenerator::generateClauses(){
-	ClausesGenerator::FNC clauses;
+	ClausesGenerator::FNC result;
 	ClausesGenerator::FNC fnc1 = generateAllHorizontalClauses();
 	result.insert(result.end(), fnc1.begin(), fnc1.end());
 	ClausesGenerator::FNC fnc2 = generateAllVerticalClauses();
 	result.insert(result.end(), fnc2.begin(), fnc2.end());
-	return clauses;
+	return result;
 }
 
 int ClausesGenerator::BOX(size_t i, size_t j){
@@ -19,16 +19,16 @@ int ClausesGenerator::BOX(size_t i, size_t j){
 }
 
 int ClausesGenerator::LBande(size_t pos, size_t ID, size_t start){
-	return this->_Loffset + pos*this->_problem->size*this->_problem->max + start*this->_problem->max + ID;
+	return this->_Loffset + pos*this->_problem->size*this->_problem->tapes + start*this->_problem->tapes + ID;
 }
 int ClausesGenerator::CBande(size_t pos, size_t ID, size_t start){
-	return this->_Coffset + pos*this->_problem->size*this->_problem->max + start*this->_problem->max + ID;
+	return this->_Coffset + pos*this->_problem->size*this->_problem->tapes + start*this->_problem->tapes + ID;
 }
 int ClausesGenerator::L(size_t i, size_t ID){
 	return this->_problem->rows.at(i).at(ID);
 }
 int ClausesGenerator::C(size_t j, size_t ID){
-	return this->_problem->cols.at(i).at(ID);
+	return this->_problem->cols.at(j).at(ID);
 }
 
 
@@ -245,8 +245,8 @@ ClausesGenerator::FNC ClausesGenerator::implies(int condition, std::vector<int> 
 	return result;
 }
 
-void load(const Problem& problem){
+void ClausesGenerator::load(const Problem& problem){
 	this->_problem = &problem;
-	this->_Loffset = (this->_problem->size*this->_problem->size);
-	this->_Coffset = _Loffset + this->_problem->size*this->_problem->size*this->_problem->max);
+	this->_Loffset = this->_problem->size*this->_problem->size;
+	this->_Coffset = _Loffset + this->_problem->size*this->_problem->size*this->_problem->tapes;
 }
