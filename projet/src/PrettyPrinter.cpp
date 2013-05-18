@@ -23,9 +23,12 @@ void PrettyPrinter::print(const Problem& problem){
 		std::cout <<  std::endl;
 	}
 }
-void PrettyPrinter::print(const Solution& solution){
+void PrettyPrinter::print(const Solution& solution, size_t indent){
 	Terminal terminal;
 	for(const std::vector<int>& line : solution.grid){
+		for(size_t i = 0; i < indent; ++i){
+			terminal.print(" ");
+		}
 		for(size_t i = 0; i < line.size(); ++i){
 			if(line.at(i) == 1){
 				terminal.print("B", terminal.OKGREEN);
@@ -43,7 +46,10 @@ void PrettyPrinter::print(const Solution& solution){
 }
 
 void PrettyPrinter::print(const lbool& ret){
-	printf(ret == l_True ? "SATISFIABLE\n" : ret == l_False ? "UNSATISFIABLE\n" : "INDETERMINATE\n");
+	Terminal terminal;
+	if(ret == l_True) terminal.println("=> SAT", terminal.OKGREEN);
+	else if(ret == l_False) terminal.println("=> UNSAT", terminal.WARNING);
+	else terminal.println("=> INDET", terminal.HEADER);
 }
 
 void PrettyPrinter::print(const std::vector<std::vector<int>>& grid){

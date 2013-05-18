@@ -31,6 +31,7 @@ public:
 			for(size_t j = 0; j < problem.size; ++j){
 				if (solver.model[box] == l_True) solution.grid[i][j] = 1;
 				else if (solver.model[box] == l_False) solution.grid[i][j] = -1;
+				else solution.grid[i][j] = 0;
 				++box;
 			}
 		}

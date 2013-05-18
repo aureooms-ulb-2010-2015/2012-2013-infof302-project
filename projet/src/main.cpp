@@ -1,4 +1,5 @@
 #include "Exception.h"
+#include "Terminal.h"
 #include "Problem.h"
 #include "ProblemParser.h"
 #include "PrettyPrinter.h"
@@ -6,6 +7,7 @@
 #include "SolverTranslator.h"
 #include "Solver.h"
 #include "Solution.h"
+#include "FileWriter.h"
 
 #include <vector>
 #include <string>
@@ -13,44 +15,52 @@
 
 int main(int argc, char* argv []){
 
+	Terminal terminal;
+
 	try{
 
-		if(argc < 2){
-			std::cout << "Error : Missing grid file in arguments" << std::endl;
-			return 1;
-		}
-
+		if(argc < 2) throw Exception("Missing input file in arguments");
 		
-		std::cout << "Init parser" << std::endl;
+		terminal.println("init ...", terminal.OKBLUE);
 		ProblemParser parser;
-		std::cout << "Init printer" << std::endl;
 		PrettyPrinter printer;
-		std::cout << "Init generator" << std::endl;
 		ClausesGenerator generator;
-		std::cout << "Init solver" << std::endl;
 		Solver solver;
+		solver.verbosity = 0;
 
 		std::string filename = argv[1];
-		std::cout << "Parsing file" << std::endl;
 		Problem problem = parser.parse(filename);
-		printer.print(problem);
-		std::cout << "Generating clauses" << std::endl;
 		std::vector<std::vector<int>> clauses = generator.run(problem);
 
-		std::cout << "Passing clauses to solver" << std::endl;
 		SolverTranslator::toSolver(clauses, solver);
 
-		std::cout << "Solving" << std::endl;
+		terminal.print("Solving ", terminal.OKBLUE);
 		lbool ret = solver.solve();
 		printer.print(ret);
 
 		Solution solution;
-		std::cout << "Parsing solution" << std::endl;
+		terminal.println("");
 		SolverTranslator::fromSolver(solver, problem, solution);
-		printer.print(solution);
+		printer.print(solution, 1);
+		terminal.println("");
+
+		if(argc >= 3){
+			terminal.println("Writing to file", terminal.OKBLUE);
+			filename = argv[2];
+			FileWriter writer;
+			if(ret == l_True){
+				problem.grid = solution.grid;
+				writer.save(problem, filename);
+			}
+			else{
+				writer.empty(filename);
+			}
+		}
+
+		terminal.println("Done", terminal.OKBLUE);
 	}
 	catch(Exception& e){
-		std::cout << e.what() << std::endl;
+		terminal.println("Error : " + e.what(), terminal.FAIL);
 		return 1;
 	}
 
