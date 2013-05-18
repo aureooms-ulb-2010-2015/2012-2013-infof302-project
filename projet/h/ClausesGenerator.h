@@ -27,6 +27,10 @@ private:
 	virtual FNC generateHorizontalClauseBoxes(size_t pos, size_t ID, size_t start);
 	virtual FNC generateHorizontalClauseOrder(size_t pos, size_t ID, size_t start);
 	virtual FNC generateHorizontalClauseOrder(size_t pos, size_t ID);
+	virtual FNC generateHorizontalClauseHoles(size_t pos, size_t ID, size_t start);
+	virtual FNC generateHorizontalClauseHoles(size_t pos, size_t ID);
+	virtual FNC generateHorizontalClauseHolesBegin(size_t pos);
+	virtual FNC generateHorizontalClauseHolesEnd(size_t pos);
 	virtual FNC generateHorizontalClause(size_t pos, size_t ID);
 	virtual FNC generateHorizontalClause(size_t pos);
 	virtual FNC generateAllHorizontalClauses();
@@ -34,10 +38,15 @@ private:
 	virtual FNC generateVerticalClauseBoxes(size_t pos, size_t ID, size_t start);
 	virtual FNC generateVerticalClauseOrder(size_t pos, size_t ID, size_t start);
 	virtual FNC generateVerticalClauseOrder(size_t pos, size_t ID);
+	virtual FNC generateVerticalClauseHoles(size_t pos, size_t ID, size_t start);
+	virtual FNC generateVerticalClauseHoles(size_t pos, size_t ID);
+	virtual FNC generateVerticalClauseHolesBegin(size_t pos);
+	virtual FNC generateVerticalClauseHolesEnd(size_t pos);
 	virtual FNC generateVerticalClause(size_t pos, size_t ID);
 	virtual FNC generateVerticalClause(size_t pos);
 	virtual FNC generateAllVerticalClauses();
-	virtual FNC implies(int condition, std::vector<int> lits);
+	virtual FNC implies(int conjonction, const std::vector<int>& lits);
+	virtual FNC implies(const std::vector<int>& conjonction, const std::vector<int>& lits);
 	virtual void load(const Problem&);
 
 

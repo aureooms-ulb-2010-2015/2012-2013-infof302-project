@@ -24,9 +24,16 @@ public:
 
 	
 	template<typename Solver>
-	static void fromSolver(const Solver& solver, Solution& solution){
-
-		// TODO use solver.model[n° de variable]
+	static void fromSolver(const Solver& solver, const Problem& problem, Solution& solution){
+		solution.grid = problem.grid;
+		size_t box = 0;
+		for(size_t i = 0; i < problem.size; ++i){
+			for(size_t j = 0; j < problem.size; ++j){
+				if (solver.model[box] == l_True) solution.grid[i][j] = 1;
+				else if (solver.model[box] == l_False) solution.grid[i][j] = -1;
+				++box;
+			}
+		}
 	}
 };
 

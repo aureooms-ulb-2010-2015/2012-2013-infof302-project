@@ -1,4 +1,5 @@
 #include "PrettyPrinter.h"
+#include "Terminal.h"
 #include <iostream>
 #include <algorithm>
 #include <iterator>
@@ -23,11 +24,21 @@ void PrettyPrinter::print(const Problem& problem){
 	}
 }
 void PrettyPrinter::print(const Solution& solution){
-
+	Terminal terminal;
 	for(const std::vector<int>& line : solution.grid){
-		std::copy(line.begin(), line.end(),
-		std::ostream_iterator<int>(std::cout, " "));
-		std::cout <<  std::endl;
+		for(size_t i = 0; i < line.size(); ++i){
+			if(line.at(i) == 1){
+				terminal.print("B", terminal.OKGREEN);
+			}
+			else if(line.at(i) == -1){
+				terminal.print("W", terminal.OKBLUE);
+			}
+			else{
+				terminal.print("U", terminal.WARNING);
+			}
+			terminal.print(" ");
+		}
+		terminal.print("\n");
 	}
 }
 

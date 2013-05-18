@@ -36,8 +36,6 @@ int main(int argc, char* argv []){
 		printer.print(problem);
 		std::cout << "Generating clauses" << std::endl;
 		std::vector<std::vector<int>> clauses = generator.run(problem);
-		std::cout << "Done" << std::endl;
-		printer.print(clauses);
 
 		std::cout << "Passing clauses to solver" << std::endl;
 		SolverTranslator::toSolver(clauses, solver);
@@ -48,7 +46,7 @@ int main(int argc, char* argv []){
 
 		Solution solution;
 		std::cout << "Parsing solution" << std::endl;
-		SolverTranslator::fromSolver(solver, solution);
+		SolverTranslator::fromSolver(solver, problem, solution);
 		printer.print(solution);
 	}
 	catch(Exception& e){
