@@ -1,5 +1,7 @@
 #include "ClausesGenerator.h"
 
+#include <iostream>
+
 std::vector<std::vector<int>> ClausesGenerator::run(const Problem& problem){
 	this->load(problem);
 	return this->generateClauses();
@@ -15,7 +17,7 @@ ClausesGenerator::FNC ClausesGenerator::generateClauses(){
 }
 
 int ClausesGenerator::BOX(size_t i, size_t j){
-	return i*this->_problem->size + j;
+	return i*this->_problem->size + j + 1;
 }
 
 int ClausesGenerator::LBande(size_t pos, size_t ID, size_t start){
@@ -247,6 +249,9 @@ ClausesGenerator::FNC ClausesGenerator::implies(int condition, std::vector<int> 
 
 void ClausesGenerator::load(const Problem& problem){
 	this->_problem = &problem;
-	this->_Loffset = this->_problem->size*this->_problem->size;
+	this->_Loffset = this->_problem->size*this->_problem->size + 1;
 	this->_Coffset = _Loffset + this->_problem->size*this->_problem->size*this->_problem->tapes;
+
+	std::cout << this->_Loffset  << std::endl;
+	std::cout << this->_Coffset  << std::endl;
 }

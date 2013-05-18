@@ -34,3 +34,11 @@ void PrettyPrinter::print(const Solution& solution){
 void PrettyPrinter::print(const lbool& ret){
 	printf(ret == l_True ? "SATISFIABLE\n" : ret == l_False ? "UNSATISFIABLE\n" : "INDETERMINATE\n");
 }
+
+void PrettyPrinter::print(const std::vector<std::vector<int>>& grid){
+	for(const std::vector<int>& line : grid){
+		std::copy(line.begin(), line.end(),
+		std::ostream_iterator<int>(std::cout, " "));
+		std::cout <<  std::endl;
+	}
+}

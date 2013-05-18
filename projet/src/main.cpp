@@ -20,23 +20,34 @@ int main(int argc, char* argv []){
 			return 1;
 		}
 
-
+		
+		std::cout << "Init parser" << std::endl;
 		ProblemParser parser;
+		std::cout << "Init printer" << std::endl;
 		PrettyPrinter printer;
+		std::cout << "Init generator" << std::endl;
 		ClausesGenerator generator;
+		std::cout << "Init solver" << std::endl;
 		Solver solver;
 
 		std::string filename = argv[1];
+		std::cout << "Parsing file" << std::endl;
 		Problem problem = parser.parse(filename);
 		printer.print(problem);
+		std::cout << "Generating clauses" << std::endl;
 		std::vector<std::vector<int>> clauses = generator.run(problem);
+		std::cout << "Done" << std::endl;
+		printer.print(clauses);
 
+		std::cout << "Passing clauses to solver" << std::endl;
 		SolverTranslator::toSolver(clauses, solver);
 
+		std::cout << "Solving" << std::endl;
 		lbool ret = solver.solve();
 		printer.print(ret);
 
 		Solution solution;
+		std::cout << "Parsing solution" << std::endl;
 		SolverTranslator::fromSolver(solver, solution);
 		printer.print(solution);
 	}
