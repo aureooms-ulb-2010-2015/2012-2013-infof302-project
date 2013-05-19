@@ -16,6 +16,7 @@ public:
 	const char* RESET = "0";
 
 	bool colors = true;
+	bool inhibited = false;
 	
 	const std::vector<const char*> COLOR = {"30","30;47","30;40","30;41","30;42","30;43","30;44","30;45","30;46",
 	"1;30","1;30;47","1;30;40","1;30;41","1;30;42","1;30;43","1;30;44","1;30;45","1;30;46","37","37;47","37;40",
@@ -35,44 +36,38 @@ public:
     const char* OKGREEN = "92";
     const char* WARNING = "93";
     const char* FAIL = "91";
-	
-
-	virtual void logColors() const{
-		for(size_t i = 0; i < this->COLOR.size(); i++){
-			this->println(this->COLOR[i],this->COLOR[i]);
-		}
-		this->println(HEADER,HEADER);
-		this->println(OKBLUE,OKBLUE);
-		this->println(OKGREEN,OKGREEN);
-		this->println(WARNING,WARNING);
-		this->println(FAIL,FAIL);
-	}
 
 	virtual void print(const std::string& s) const{
+		if(inhibited) return;
 		std::cout << s;
 	}
 
 	virtual void print(const std::string& s, const char* color) const{
+		if(inhibited) return;
 		this->setColor(color);
 		this->print(s);
 		this->resetColor();
 	}
 	
 	virtual void println(const std::string& s) const{
+		if(inhibited) return;
 		this->print(s);
 		std::cout << std::endl;
 	}
 	
 	virtual void println(const std::string& s, const char* color) const{
+		if(inhibited) return;
 		this->print(s, color);
 		std::cout << std::endl;
 	}
 
 	virtual void setColor(const char* color) const{
+		if(inhibited) return;
 		if(colors) std::cout << this->BEG << color << this->END;
 	}
 	
 	virtual void resetColor() const{
+		if(inhibited) return;
 		this->setColor(this->RESET);
 	}
 

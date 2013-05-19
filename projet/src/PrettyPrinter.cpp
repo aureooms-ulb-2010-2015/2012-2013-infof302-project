@@ -8,6 +8,7 @@
 PrettyPrinter::PrettyPrinter(Terminal* terminal):terminal(terminal){}
 
 void PrettyPrinter::print(const Problem& problem){
+	if(terminal->inhibited) return;
 	std::cout << problem.size << " " << problem.tapes << std::endl;
 	for(const std::vector<int>& col : problem.cols){
 		std::copy(col.begin(), col.end(),
@@ -26,6 +27,7 @@ void PrettyPrinter::print(const Problem& problem){
 	}
 }
 void PrettyPrinter::print(const Solution& solution, size_t indent){
+	if(terminal->inhibited) return;
 	for(const std::vector<int>& line : solution.grid){
 		for(size_t i = 0; i < indent; ++i){
 			terminal->print(" ");
@@ -47,11 +49,13 @@ void PrettyPrinter::print(const Solution& solution, size_t indent){
 }
 
 void PrettyPrinter::print(const bool ret){
+	if(terminal->inhibited) return;
 	if(ret) terminal->println("=> SAT", terminal->OKGREEN);
 	else terminal->println("=> UNSAT", terminal->WARNING);
 }
 
 void PrettyPrinter::print(const std::vector<std::vector<int>>& grid){
+	if(terminal->inhibited) return;
 	for(const std::vector<int>& line : grid){
 		std::copy(line.begin(), line.end(),
 		std::ostream_iterator<int>(std::cout, " "));

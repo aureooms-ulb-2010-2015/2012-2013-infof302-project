@@ -63,6 +63,7 @@ void HELP(){
 
 void CONFIGURE(){
     if(FLAG(--nocolor)) TERMINAL.colors = false;
+    if(!FLAG(-v)) TERMINAL.inhibited = true;
 }
 void PREPARE(){
     std::cout << std::boolalpha;
