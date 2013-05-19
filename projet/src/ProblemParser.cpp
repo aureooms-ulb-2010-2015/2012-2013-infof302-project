@@ -78,7 +78,7 @@ void ProblemParser::fill(std::ifstream& fs, std::vector<std::vector<int>>& mat, 
 	while(fs.good() && mat.size() < size){
 		char c = fs.get();
 		if(fs.good()){
-			if(std::isdigit(c)){
+			if(std::isdigit(c) || c == '-'){
 				token.push_back(c);
 			}
 			else if(c == ' ' && !token.empty()){

@@ -98,4 +98,15 @@ void ClausesGenerator::load(const Problem& problem){
 	this->_problem = &problem;
 	this->_Loffset = this->_problem->size*this->_problem->size + 1;
 	this->_Coffset = _Loffset + this->_problem->size*this->_problem->size*this->_problem->tapes;
+
+	for(size_t i = 0; i < this->_problem->size; ++i){
+		for(size_t j = 0; j < this->_problem->size; ++j){
+			if(this->_problem->grid[i][j] == 1){
+				this->_final->push_back({RBOX(i, j)});
+			}
+			else if(this->_problem->grid[i][j] == -1){
+				this->_final->push_back({-RBOX(i, j)});
+			}
+		}
+	}
 }

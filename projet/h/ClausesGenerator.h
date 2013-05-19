@@ -124,18 +124,25 @@ private:
 
 	template<Which D>
 	inline void generateClause(size_t pos){
-		for(size_t ID = 0; ID < TAPES<D>().at(pos).size(); ++ID){
-			generateClause<D>(pos, ID);
-		}
+		if(!TAPES<D>().at(pos).empty()){
+			for(size_t ID = 0; ID < TAPES<D>().at(pos).size(); ++ID){
+				generateClause<D>(pos, ID);
+			}
 
-		for(size_t ID = 0; ID < TAPES<D>().at(pos).size() - 1; ++ID){
-			generateClauseOrder<D>(pos, ID);
+			for(size_t ID = 0; ID < TAPES<D>().at(pos).size() - 1; ++ID){
+				generateClauseOrder<D>(pos, ID);
+			}
+			generateClauseHolesBegin<D>(pos);
+			for(size_t ID = 0; ID < TAPES<D>().at(pos).size() - 1; ++ID){
+				generateClauseHoles<D>(pos, ID);		
+			}
+			generateClauseHolesEnd<D>(pos);
 		}
-		generateClauseHolesBegin<D>(pos);
-		for(size_t ID = 0; ID < TAPES<D>().at(pos).size() - 1; ++ID){
-			generateClauseHoles<D>(pos, ID);		
+		else{
+			for(size_t j = 0; j < this->_problem->size; ++j){
+				this->_final->push_back({-BOX<D>(pos, j)});
+			}
 		}
-		generateClauseHolesEnd<D>(pos);
 	}
 
 	template<Which D>
