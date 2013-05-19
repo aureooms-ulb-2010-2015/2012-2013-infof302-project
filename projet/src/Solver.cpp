@@ -21,7 +21,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 #include "Sort.h"
 #include <cmath>
 
-
+namespace Minisat{
 //=================================================================================================
 // Helper functions:
 
@@ -778,4 +778,5 @@ bool Solver::solve(const vec<Lit>& assumps)
 
     cancelUntil(0);
     return status == l_True;
+}
 }

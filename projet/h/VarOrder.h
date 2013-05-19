@@ -23,7 +23,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 #include "SolverTypes.h"
 #include "Heap.h"
 
-
+namespace Minisat{
 
 //=================================================================================================
 
@@ -91,7 +91,7 @@ Var VarOrder::select(double random_var_freq)
 
     return var_Undef;
 }
-
+}
 
 //=================================================================================================
 #endif

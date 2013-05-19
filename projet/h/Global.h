@@ -27,7 +27,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 #include <climits>
 #include <cfloat>
 #include <new>
-
+namespace Minisat{
 
 //=================================================================================================
 // Basic Types & Minor Things:
@@ -270,6 +270,6 @@ template <class T> static inline bool operator <= (const T& x, const T& y) { ret
 template <class T> static inline bool operator >= (const T& x, const T& y) { return !(x < y);  }
 #endif
 
-
+}
 //=================================================================================================
 #endif

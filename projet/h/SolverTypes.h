@@ -24,7 +24,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 #ifndef Global_h
 #include "Global.h"
 #endif
-
+namespace Minisat{
 
 //=================================================================================================
 // Variables, literals, clause IDs:
@@ -125,6 +125,6 @@ inline GClause GClause_new(Clause* c) { assert(((uintp)c & 1) == 0); return GCla
 
 #define GClause_NULL GClause_new((Clause*)NULL)
 
-
+}
 //=================================================================================================
 #endif

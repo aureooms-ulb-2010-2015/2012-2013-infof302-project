@@ -22,7 +22,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 
 #include "SolverTypes.h"
 #include "VarOrder.h"
-
+namespace Minisat{
 // Redfine if you want output to go somewhere else:
 #define reportf(format, args...) ( printf(format , ## args), fflush(stdout) )
 
@@ -201,6 +201,6 @@ public:
 // Just like 'assert()' but expression will be evaluated in the release version as well.
 inline void check(bool expr) { assert(expr); }
 
-
+}
 //=================================================================================================
 #endif

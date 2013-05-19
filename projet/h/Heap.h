@@ -20,7 +20,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 #ifndef Heap_h
 #define Heap_h
 
-
+namespace Minisat{
 //=================================================================================================
 
 
@@ -95,6 +95,6 @@ class Heap {
             || ((parent(i) == 0 || !comp(heap[i],heap[parent(i)])) && heapProperty(left(i)) && heapProperty(right(i))); }
 };
 
-
+}
 //=================================================================================================
 #endif

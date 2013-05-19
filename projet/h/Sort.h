@@ -22,7 +22,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 
 
 //=================================================================================================
-
+namespace Minisat{
 
 template<class T>
 struct LessThan_default {
@@ -126,6 +126,6 @@ template <class T, class LessThan> void sortUnique(vec<T>& v, LessThan lt) {
 template <class T> void sortUnique(vec<T>& v) {
     sortUnique(v, LessThan_default<T>()); }
 
-
+}
 //=================================================================================================
 #endif

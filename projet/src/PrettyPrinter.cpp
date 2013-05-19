@@ -5,6 +5,8 @@
 #include <iterator>
 
 
+PrettyPrinter::PrettyPrinter(Terminal* terminal):terminal(terminal){}
+
 void PrettyPrinter::print(const Problem& problem){
 	std::cout << problem.size << " " << problem.tapes << std::endl;
 	for(const std::vector<int>& col : problem.cols){
@@ -24,32 +26,29 @@ void PrettyPrinter::print(const Problem& problem){
 	}
 }
 void PrettyPrinter::print(const Solution& solution, size_t indent){
-	Terminal terminal;
 	for(const std::vector<int>& line : solution.grid){
 		for(size_t i = 0; i < indent; ++i){
-			terminal.print(" ");
+			terminal->print(" ");
 		}
 		for(size_t i = 0; i < line.size(); ++i){
 			if(line.at(i) == 1){
-				terminal.print("B", terminal.OKGREEN);
+				terminal->print("B", terminal->OKGREEN);
 			}
 			else if(line.at(i) == -1){
-				terminal.print("W", terminal.OKBLUE);
+				terminal->print("W", terminal->OKBLUE);
 			}
 			else{
-				terminal.print("U", terminal.WARNING);
+				terminal->print("U", terminal->WARNING);
 			}
-			terminal.print(" ");
+			terminal->print(" ");
 		}
-		terminal.print("\n");
+		terminal->print("\n");
 	}
 }
 
-void PrettyPrinter::print(const lbool& ret){
-	Terminal terminal;
-	if(ret == l_True) terminal.println("=> SAT", terminal.OKGREEN);
-	else if(ret == l_False) terminal.println("=> UNSAT", terminal.WARNING);
-	else terminal.println("=> INDET", terminal.HEADER);
+void PrettyPrinter::print(const bool ret){
+	if(ret) terminal->println("=> SAT", terminal->OKGREEN);
+	else terminal->println("=> UNSAT", terminal->WARNING);
 }
 
 void PrettyPrinter::print(const std::vector<std::vector<int>>& grid){
