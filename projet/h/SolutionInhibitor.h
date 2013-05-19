@@ -11,8 +11,8 @@ class SolutionInhibitor{
 			Clause clause;
 			for(size_t i = 0; i < solution.grid.size(); ++i){
 				for(size_t j = 0; j < solution.grid.at(i).size(); ++j){
-					if(solution.grid.at(i).at(j) == 1) clause.push_back(-generator.BOX(i,j));
-					else if (solution.grid.at(i).at(j) == -1) clause.push_back(generator.BOX(i,j));
+					if(solution.grid.at(i).at(j) == 1) clause.push_back(-generator.RBOX(i,j));
+					else if (solution.grid.at(i).at(j) == -1) clause.push_back(generator.RBOX(i,j));
 				}
 			}
 
