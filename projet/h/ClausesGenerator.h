@@ -21,7 +21,7 @@ private:
 	void generateClauses();
 
 	template<Which D>
-	void generateClauseBoxes(size_t pos, size_t ID, size_t start){
+	inline void generateClauseBoxes(size_t pos, size_t ID, size_t start){
 		std::vector<int> lits;
 		for(size_t j = start; j < start + SIZE<D>(pos, ID); ++j){
 			lits.push_back(BOX<D>(pos, j));
@@ -33,7 +33,7 @@ private:
 	}
 
 	template<Which D>
-	void generateClauseAtMostOne(size_t pos, size_t ID, size_t start){
+	inline void generateClauseAtMostOne(size_t pos, size_t ID, size_t start){
 		std::vector<int> lits;
 		for(size_t j = start + 1; j < this->_problem->size; ++j){
 			lits.push_back(-TAPE<D>(pos, ID, j));
@@ -42,7 +42,7 @@ private:
 	}
 
 	template<Which D>
-	void generateClause(size_t pos, size_t ID){
+	inline void generateClause(size_t pos, size_t ID){
 
 		for(size_t start = 0; start + SIZE<D>(pos, ID) <= this->_problem->size; ++start){
 			generateClauseBoxes<D>(pos, ID, start);
@@ -64,7 +64,7 @@ private:
 	}
 
 	template<Which D>
-	void generateClauseOrder(size_t pos, size_t ID, size_t start){
+	inline void generateClauseOrder(size_t pos, size_t ID, size_t start){
 		std::vector<int> lits;
 		for(size_t j = 0; j <= start + SIZE<D>(pos, ID); ++j){
 			lits.push_back(-TAPE<D>(pos, ID+1, j));
@@ -73,14 +73,14 @@ private:
 	}
 
 	template<Which D>
-	void generateClauseOrder(size_t pos, size_t ID){
+	inline void generateClauseOrder(size_t pos, size_t ID){
 		for(size_t start = 0; start + SIZE<D>(pos, ID) <= this->_problem->size; ++start){
 			generateClauseOrder<D>(pos, ID, start);	
 		}
 	}
 
 	template<Which D>
-	void generateClauseHoles(size_t pos, size_t ID, size_t start){
+	inline void generateClauseHoles(size_t pos, size_t ID, size_t start){
 		for(size_t j = start + SIZE<D>(pos, ID) + 1; j < this->_problem->size; ++j){
 			std::vector<int> conjonction = {TAPE<D>(pos, ID, start), TAPE<D>(pos, ID+1, j)};
 			std::vector<int> lits;
@@ -92,14 +92,14 @@ private:
 	}
 
 	template<Which D>
-	void generateClauseHoles(size_t pos, size_t ID){
+	inline void generateClauseHoles(size_t pos, size_t ID){
 		for(size_t start = 0; start + SIZE<D>(pos, ID) <= this->_problem->size; ++start){
 			generateClauseHoles<D>(pos, ID, start);		
 		}
 	}
 
 	template<Which D>
-	void generateClauseHolesBegin(size_t pos){
+	inline void generateClauseHolesBegin(size_t pos){
 		const size_t ID = 0;
 		for(size_t start = 0; start + SIZE<D>(pos, ID) <= this->_problem->size; ++start){
 			std::vector<int> lits;
@@ -111,7 +111,7 @@ private:
 	}
 
 	template<Which D>
-	void generateClauseHolesEnd(size_t pos){
+	inline void generateClauseHolesEnd(size_t pos){
 		const size_t ID = TAPES<D>().at(pos).size() - 1;
 		for(size_t start = 0; start + SIZE<D>(pos, ID) <= this->_problem->size; ++start){
 			std::vector<int> lits;
@@ -123,7 +123,7 @@ private:
 	}
 
 	template<Which D>
-	void generateClause(size_t pos){
+	inline void generateClause(size_t pos){
 		for(size_t ID = 0; ID < TAPES<D>().at(pos).size(); ++ID){
 			generateClause<D>(pos, ID);
 		}
@@ -139,14 +139,14 @@ private:
 	}
 
 	template<Which D>
-	void generateAllClauses(){
+	inline void generateAllClauses(){
 		for(size_t pos = 0; pos < this->_problem->size; ++pos){
 			generateClause<D>(pos);		
 		}
 	}
 
-	void implies(int conjonction, const std::vector<int>& lits);
-	void implies(const std::vector<int>& conjonction, const std::vector<int>& lits);
+	inline void implies(int conjonction, const std::vector<int>& lits);
+	inline void implies(const std::vector<int>& conjonction, const std::vector<int>& lits);
 	virtual void load(const Problem&);
 
 
