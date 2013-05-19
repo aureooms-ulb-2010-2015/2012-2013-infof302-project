@@ -55,6 +55,30 @@ $\kern\wd\@ne\kern -\@tempdima\left\@firstoftwo#1%
 \newcommand\grey{\cellcolor{black!50}}
 
 %%%%%%%%%%%%%%%%%
+
+\usepackage{listings}
+\definecolor{lightgray}{rgb}{.9,.9,.9}
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+\lstdefinestyle{Cpp}{
+backgroundcolor=\color{lightgray},
+  belowcaptionskip=1\baselineskip,
+  breaklines=true,
+  captionpos=b,
+  xleftmargin=\parindent,
+  language=C++,
+  numbers=left,
+  numbersep=5pt,
+  numberstyle=\tiny\color{darkgray},
+  showstringspaces=false,
+  basicstyle=\footnotesize\ttfamily,
+  keywordstyle=\bfseries\color{green!40!black},
+  commentstyle=\itshape\color{purple!40!black},
+  identifierstyle=\color{blue},
+  stringstyle=\color{orange},
+}
+
+
 \begin{document}
 
 
@@ -82,7 +106,7 @@ $\kern\wd\@ne\kern -\@tempdima\left\@firstoftwo#1%
 \newpage
 
 
-\chapter{Énumération 3,2}
+\chapter{Question 1: Énumération 3,2}
 
 \section{Problème et notation}
 \subsection{Grille}
@@ -152,7 +176,7 @@ Pour miniSAT, il faut coder les propositions par des entiers.
 La taille d'une grille est de $3\times3$, on codera en base 3.
 
 
-Pour ($i$,$j$,$v$) on aura le codage: $(i \times n²)+(j \times n)+(v+1)$
+Pour  $x_{i,j,v}$ on aurait par exemple le codage: $(i \times n²)+(j \times n)+(v+1)$
 
 
 \section{Contraintes}
@@ -165,7 +189,7 @@ $$ \bigwedge_{i \in \{0,1,2\}} \left( \bigvee_{j \in \{0,1,2\}} x_{i,j} \right) 
 idem pour chaque colonne.
 $$ \bigwedge_{j \in \{0,1,2\}} \left( \bigvee_{i \in \{0,1,2\}} x_{i,j} \right) $$
 
-\item (trivial) \textbf{Pour toutes} lignes, \textbf{pour toutes} colonnes, \textbf{pour toutes} bandes, \textbf{il existe} une case qui satisfait à la fois une bande de la ligne et une de la colonne.
+\item (trivial) \textbf{Pour toute} ligne, \textbf{pour toute} colonne, \textbf{pour toute} bande, \textbf{il existe} une case qui satisfait à la fois une bande de la ligne et une de la colonne.
 $$\bigwedge_{i \in \{0,1,2\}} \bigwedge_{j \in \{0,1,2\}} \bigwedge_{b_i^{(k)}, k\in\{1,2\}} 
 \lnot \left(
 	\lnot x_{i,j} \wedge x_{i,j}
@@ -176,13 +200,13 @@ $$\bigwedge_{i \in \{0,1,2\}} \bigwedge_{j \in \{0,1,2\}} \bigwedge_{b_i^{(k)}, 
 	x_{i,j} \vee \lnot x_{i,j}
 \right)$$
 
-\item \textbf{Pour toutes} lignes $i$, \textbf{pour toutes} bandes $b_i^{(k)}, k\in\{1,2\}$ associées à la ligne, \textbf{il existe} \textit{autant} de cases vraies $x_{i,j}$ que ne l'exprime la taille de la bande. 
+\item \textbf{Pour toute} ligne $i$, \textbf{pour toute} bande $b_i^{(k)}, k\in\{1,2\}$ associées à la ligne, \textbf{il existe} \textit{autant} de cases vraies $x_{i,j}$ que ne l'exprime la taille de la bande. 
 
 Cela donne au cas par cas:
 	\begin{enumerate}
 		\item Une seule bande: 
 		\begin{enumerate}
-			\item Pour toutes lignes $i$ où $b=3$, 
+			\item Pour toute ligne $i$ où $b=3$, 
 			$$\bigwedge_{j\in\{0,1,2\}}\left( \bigvee_{l=1}^{n=1} x_{i,j} \right)$$
 			\begin{center}						
 			\begin{tabular}{|c|c|c|}
@@ -192,7 +216,7 @@ Cela donne au cas par cas:
 			\end{tabular}
 			\end{center}
 
-			\item Pour toutes lignes $i$ où $b=2$, 
+			\item Pour toute ligne $i$ où $b=2$, 
 			$$(\lnot x_{i,0} \vee \lnot x_{i,2}) \wedge (x_{i,0} \vee x_{i,2}) \wedge x_{i,1}$$
 			\begin{center}						
 			\begin{tabular}{|c|c|c|}
@@ -208,7 +232,7 @@ Cela donne au cas par cas:
 			\end{tabular}
 			\end{center}
 			
-			\item Pour toutes lignes $i$ où $b=1$, 
+			\item Pour toute ligne $i$ où $b=1$, 
 			$$\bigwedge_{\stackrel{j,j' \in\{0,1,2\}}{j<j', j''\neq j,j'}} (\lnot x_{i,j}\vee \lnot x_{i,j'} \vee x_{i,j''} ) $$
 			\begin{center}						
 			\begin{tabular}{|c|c|c|}
@@ -230,7 +254,7 @@ Cela donne au cas par cas:
 			\end{tabular}
 			\end{center}
 			
-			\item Pour toutes lignes $i$ où $b=0$,
+			\item Pour toute ligne $i$ où $b=0$,
 			$$\bigwedge_{j\in\{0,1,2\}}\left( \bigvee_{l=1}^{n=1} \lnot x_{i,j} \right)$$
 			\begin{center}						
 			\begin{tabular}{|c|c|c|}
@@ -242,7 +266,7 @@ Cela donne au cas par cas:
 			
 		\end{enumerate}
 
-		\item Deux bandes, pour toutes lignes $i$:
+		\item Deux bandes, pour toute ligne $i$:
 		$$\left( \bigvee_{l=1}^{n=1} x_{i,0} \right) \wedge \left(\bigvee_{l=1}^{n=1} \lnot x_{i,1}\right) \wedge \left(\bigvee_{l=1}^{n=1} x_{i,2}\right)$$
 			\begin{center}						
 			\begin{tabular}{|c|c|c|}
@@ -253,7 +277,7 @@ Cela donne au cas par cas:
 			\end{center}
 			
 	\end{enumerate}
-	Idem pour toutes colonnes. 
+	Idem pour toute colonne. 
 \end{enumerate}
 
 \section{Parcours et représentation par énumération}
@@ -339,12 +363,14 @@ On effectue de même par colonne et relativement aux contraintes de la colonne.\
 \end{algorithm}
 
 
-\chapter{Les Bandes}
+\chapter{Question 2: Les Bandes}
 \section{Problème et notation}
 
 Une suite de cases noires représente une \textit{bande}. 
 
-Une bande appartient à une ligne ou colonne et commence à une position donnée. Comme il peut y avoir plusieurs bandes sur une même ligne ou colonne, chaque bande doit être identifiable.\\
+Une bande appartient à une ligne ou colonne et commence à une position donnée. 
+
+Comme il peut y avoir plusieurs bandes sur une même ligne ou colonne, chaque bande doit être identifiable.
 
 \subsection{Variables}
 
@@ -360,7 +386,7 @@ où,
 On défini deux fonctions donnant la longueur d'une bande:
 \begin{description}
 \item[$\mathtt{L}(pos,ID)$] donnant la longueur de la $ID^{eme}$ bande à la ligne $pos$.
-\item[$\mathtt{C}(pos,ID)$] donnant la longueur de la $ID^{eme}$ bande à la colonne $pos$.\\
+\item[$\mathtt{C}(pos,ID)$] donnant la longueur de la $ID^{eme}$ bande à la colonne $pos$.
 \end{description} 
 
 \subsection{Sémantique}
@@ -400,14 +426,200 @@ $x_{3,2+\mathtt{L}(3,2)+1} = \bot  $
 
 où $x_{pos,j+1}$ donne $\bot$ que ce soit parce qu'il existe une case vide ou parce qu'on excède la taille de la grille.
 
-\subsection{Codage}
-
 \section{Contraintes}
 
-Selon la définition donnée d'une bande, la donnée décisive est la valeur du paramètre $start$. 
+Cinq contraintes ont été extraites de la problématique:
+\begin{enumerate}
+\item Une bande comporte par définition des implications sur son voisinage.
+\item Au moins une des positions doit être valide.
+\item Une bande ne peut avoir qu'une seule position.
+\item Les bandes doivent respecter l'ordre qui est imposé par le jeu.
+\item Il existe des case vides en dehors des bandes.
+\end{enumerate}
+
+\subsection{Énumération des possibles}
+On définit, pour chaque position potentielle d'une bande, une variable: $a,b,c,d,...$ \\
+%enumérer les positions
+Chaque variable implique des conditions de véracité pour les $\mathtt{L}(pos,ID)+1$ cases suivantes.
+
+$$a \implies \{X_{i,0},X_{i,1},X_{i,2},\lnot X_{i,3}\}$$
+$$b \implies \{X_{i,1},X_{i,2},X_{i,3},\lnot X_{i,4}\}$$
+$$c \implies \{X_{i,2},X_{i,3},X_{i,4},\lnot X_{i,5}\}$$
+$$d \implies \{X_{i,3},X_{i,4},X_{i,5},\lnot X_{i,6}\}$$
+$$e \implies \{X_{i,4},X_{i,5},X_{i,6},\lnot X_{i,7}\}$$
+
+Cette suite d'implication est alors concaténée à l'aide de conjonction en vue de créer la contrainte associée à la bande et la ligne.\\
+
+Les implications décrites possèdent une FNC associée, on aura par exemple pour:
+$$a \implies \{X_{i,0} \wedge X_{i,1} \wedge X_{i,2} \wedge \lnot X_{i,3}\},$$
+la FNC:
+$$(\lnot a \vee X_{i,0}) \wedge ( \lnot a \vee X_{i,1}) \wedge ( \lnot a \vee X_{i,2}) \wedge (\lnot a \vee \lnot X_{i,3})$$
+%au moins une postion
+\subsection{Au moins une position}
+Une conséquence de l'énumération des possibles telle que décrite est qu'on ne garantit pas jusqu'à présent qu'il y ait au moins une solution.
+
+Il faut joindre une clause qui précise qu'au moins une des positions se réalise:
+$$(a \vee b \vee c \vee ...)$$
+
+% AU Max une position
+\subsection{Une position au maximum}
+On a une série de positions possible dont une au moins se réalise, il faut maintenant borner le nombre de position possible, c'est-à-dire garantir qu'il ne puisse y avoir plus d'une position valide.
+
+En effet, on autorise jusqu'à présent le cas suivant:
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+	\hline
+	$x_{0}$ & $x_{1}$ & $x_{2}$ & $x_{3}$ & $x_{4}$ & $x_{5}$& $x_{6}$\\	
+	\hline
+	\black \color{white}$\top$ & \black \color{white}$\top$  & \black \color{white}$\top$  
+	& $\bot$ & 	
+	\black \color{white}$\top$ & \black \color{white}$\top$  & \black \color{white}$\top$  \\ 			
+	\hline
+\end{tabular}
+\end{center}
+C'est-à-dire que l'implication $a$ ne conditionne aucunement la véracité de l'implication $e$:
+$$a \implies \{X_{i,0},X_{i,1},X_{i,2},\lnot X_{i,3}\}$$
+$$e \implies \{X_{i,4},X_{i,5},X_{i,6},\lnot X_{i,7}\}$$
+
+Afin de pallier à cela, on introduit de nouvelles contraintes pour éviter les cas de superpositions. Il y a plusieurs façons de les spécifier.
 
 \begin{enumerate}
-\item Une bande est contenue dans la grille ou dans l'espace délimité par la bande suivante.
+\item La position d'un bande implique qu'elle ne se trouve pas ailleurs, ce pour chaque bande:
+$$a \implies (\lnot b \wedge \lnot c \wedge \lnot d \wedge ... )\; \wedge$$
+$$b \implies (\lnot a \wedge \lnot c \wedge \lnot d \wedge ... )\; \wedge$$
+$$c \implies (\lnot a \wedge \lnot b \wedge \lnot d \wedge ... )\; \wedge ...$$
+Ce qui peut se simplifier, compte tenu de la nature de la clause, en:
+$$a \implies (\lnot b \wedge \lnot c \wedge \lnot d \wedge ... )\; \wedge$$
+$$b \implies (\lnot c \wedge \lnot d \wedge \lnot e \wedge ... )\; \wedge$$
+$$c \implies (\lnot d \wedge \lnot e)\; \wedge ...$$
+
+\item Aucun couple de bandes n'est possible:
+$$\lnot(a \wedge b) \wedge \lnot(a \wedge c) \wedge \lnot(a \wedge d) \wedge ...  $$
+Ce qui donne en FNC: 
+$$(\lnot a \vee \lnot b) \wedge (\lnot a \vee \lnot c) \wedge (\lnot a \vee \lnot d) \wedge ...$$
+
+\item La valuation d'une bande superposée à elle-même est rendue impossible par l'implication associée à chaque bande.\\
+Cependant, seul les cas où l'implication d'une bande ne conditionne aucunement la véracité de l'implication de la position cette même bande à un autre endroit, doit être traité: \\
+$$a \implies \lnot e$$
+dont la FNC utilisée est:		
+$$(\lnot a \vee \lnot e)$$
+\end{enumerate}
+
+Le choix de la façon de spécifier la contrainte conduit à la question suivante: la redondance d'information accélère-t-elle la recherche de satisfaisabilité? 
+
+\subsection{De l'ordre des bandes}
+%order matters:
+%	A_k => AND (-B_j) FOR ALL j <= k+1
+%	B_k => AND (-C_j) FOR ALL j <= k+1
+
+Les bandes sont spécifiées dans un ordre donné en marge de la grille. 
+
+Il y a donc une contrainte inhérente à l'ordre dans lequel sont données les bandes.\\
+
+Soit l'exemple: 
+\begin{center}
+3 2 
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+	\black \color{white} A & \black \color{white}$\top$  & \black \color{white}$\top$  
+	& $\bot$ & 	
+	$\bot$ & \black \color{white}B  & \black \color{white}$\top$  \\ 			
+	\hline
+\end{tabular}
+\end{center}
+
+On sait qu'on ne peut avoir en aucun cas quelque chose de similaire à:
+
+\begin{center}
+3 2 
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+	\hline
+	 \black \color{white}B  & \black \color{white}$\top$ 			
+	& $\bot$ & 	$\bot$ &
+	\black \color{white}A & \black \color{white}$\top$  & \black \color{white}$\top$  \\	
+	\hline
+\end{tabular}
+\end{center}
+
+On joint explicitement une série de clauses qui précise, selon l'exemple:\\ 
+$$A_k \equiv LBande_{i,1,k}$$
+$$B_l \equiv LBande_{i,2,l}$$
+et qui impose la contrainte,
+$$LBande_{i,1,k} \implies \lnot LBande_{i,2,l}$$
+c'est-à-dire $$A_k \implies \lnot B_l$$
+$$\forall l<k$$
+%pour
+%$$LBande_{i,1,k} \equiv A_k \implies \{X_{i,k},X_{i,k+1},X_{i,k+2},\lnot X_{i,k+3}\}$$ 
+%$$LBande_{i,2,l} \equiv B_l \implies \{X_{i,l},X_{i,l+1},X_{i,l+2},\lnot X_{i,l+3}\}$$
+
+%	A_k => AND (-B_j) FOR ALL j <= k+1
+%	B_l => AND (-C_j) FOR ALL j <= l+1
+Cette contrainte s'exprime aussi comme la conjonction des implications:
+$$A_k \implies \left( \bigwedge_{j}^{k+1} \lnot B_j \right),$$
+$$B_l \implies \left( \bigwedge_{j}^{l+1} \lnot C_j \right),$$
+$$\cdots$$
+
+\subsection{Case(s) vide(s) entre les bandes}
+%white holes between tapes:
+%A_k AND B_j => AND(-x_k) FOR ALL k < x < j FOR ALL j > k
+
+Pour toute bande différente appartenant à la même ligne/colonne, il existe au moins $x$ cases vides:\\
+	$$b-1 \leq x \leq n - \sum_{k}\mathtt{L}(i,ID_k)$$
+	où,
+	\begin{itemize}
+		\item[]le nombre de bandes, sur une ligne $i$, est $b=\sum ID$
+		\item[]$n$ est la longueur de la grille\\
+	\end{itemize}
+
+
+Les cases vides peuvent se trouver à différents endroits:
+\begin{enumerate}
+\item En début de ligne/colonne, c'est-à-dire avant la première bande.
+\item Entre deux bandes, où il faudra calculer le nombre de cases vides entre chaque bande et la suivante.
+\item En fin de ligne/colonne, c'est-à-dire après la dernière bande.
+\item En combinaison des cas précédents.\\
+\end{enumerate}
+Intuitivement, il s'agit de cerner les cases vides plausibles sur une ligne/colonne, par exemple:		
+			\begin{center}						
+			\begin{tabular}{|c|c|c|c|c|c|}
+			\hline 
+			\black \color{white}A  &   &    &   & \black \color{white} B & \black   \\ 			
+			\hline 
+			$\top$ & $\bot$ & $\bot$  & $\bot$ & $\top$ & $\top$ \\ 
+			\hline  
+			$\uparrow k$ & \multicolumn{3}{c|}{$\lnot x_l$} & $\uparrow j$ & \\ 
+			\hline
+			\end{tabular}
+			\end{center}
+Soit $A$ et $B$, deux bandes commençant respectivement à la position $k$ et $j$,
+$$( A_k \wedge B_j ) \implies (\bigwedge_{l=k+1}^{j-1} \lnot x_l)$$
+
+Ce qui se traduit en FNC par:
+$$(\lnot A\vee \lnot B \vee \lnot x_{k+1})\wedge(\lnot A \vee \lnot B \vee \lnot x_{k+\cdots})\wedge(\lnot A\vee \lnot B\vee \lnot x_{j-1})$$
+Et de façon générale, dans le cas de cases entre deux bandes:
+$$ \bigwedge_{\forall k,j\; | \;k<j} \left( \bigvee_{ID} \lnot ID \vee \lnot x_k \right) $$
+
+
+\subsection{Contraintes implicites}
+\subsubsection{De l'interdépendance des contraintes de lignes et de colonnes}
+\begin{quote}
+ La taille des bandes apparaissant dans toutes les lignes est équivalent à celle des bandes de toutes les colonnes.	\\	
+\end{quote}
+$$\sum_i \sum_k \mathtt{L}(i,ID^{(k)}) = \sum_j \sum_k \mathtt{C}(j,ID^{(k)})$$
+Cela se comprend aisément par le fait qu'une valuation donnée à une case vaut pour les deux dimensions (ligne et colonne)
+
+Ce constat intervient au sujet de la nécessité ou non d'introduire une clause liant les conditions sur les colonnes et sur les lignes.
+
+Le découpage du problème en terme de ligne et colonne incline à penser qu'il s'agit de situations distinctes qu'il faudrait corréler à un moment ou l'autre.
+
+On se figure rapidement qu'une solution du problème, c'est-à-dire une valuation pour la grille, est la valuation pour chaque case telle qu'elle répond adéquatement à la double contrainte (ligne et colonne).\\
+
+Autrement dit une valuation qui respecterait les contraintes liées à une ligne serait automatiquement invalidée si au moins une des valuations de ses cases ne répondait pas adéquatement à la contrainte de la colonne dans laquelle elle se trouve.\\
+
+
+\subsection{Remarques}
+
+Une bande est contenue dans la grille ou dans l'espace délimité par la bande suivante.
 	$$max(start_k) =
 	\begin{cases} 
 		 start_{k+1}-\mathtt{L}(pos,ID_k)-1, &\text{si } ID > 1\\
@@ -420,9 +632,10 @@ Selon la définition donnée d'une bande, la donnée décisive est la valeur du 
 		\item[] $ID_k$ est la $k^{eme}$ bande
 		\item[] $k=\{0,...,b\}$
 		\item[] $b$ est le nombre de bandes sur la ligne/colonne, $b=\sum ID$		
-		\item[] $start_k$ est la position de départ de la bande avec $ID_k$.
+		\item[] $start_k$ est la position de départ de la bande avec $ID_k$.\\
 		\end{itemize}
-\item Deux bandes de la même ligne/colonne ne peuvent se superposer.
+
+Deux bandes de la même ligne/colonne ne peuvent se superposer.
 $$ min(start_k) = 
 	\begin{cases} 
 		start_{k-1}+\mathtt{L}(pos,ID_{k-1})+1, &\text{si } ID > 1 \\
@@ -436,326 +649,399 @@ où,
 		\item[] $b$ est le nombre de bandes sur la ligne/colonne, $b=\sum ID$	
 		\item[] $start_k$ est la position de départ de la bande avec $ID_k$.
 		\end{itemize}
-		
-	
-\item \textbf{Pour toutes} bandes différentes appartenant à la même ligne/colonne, \textbf{il existe} \textit{au moins} $v$ cases vides:\\
-où, $v$ se donne comme:
-	\begin{itemize}
-		\item[]	Soit $b$, le nombre de bandes sur une ligne, $b=\sum ID$\\
-		Soit $v$, le nombre de cases vides,\\
-		alors $min(v )= b-1$\\
-	\end{itemize}
 
-	Ce qui peut se traduire comme, pour toutes lignes $i$,
-			$$\bigwedge_{k\in\{0,\cdots,b\}}\left( 
-				\bigvee_{\delta=\{0,\cdots,max(start_{k+1})-min(start_k)\}} \lnot x_{i,j+\delta} 
-			\right)$$
-	Ou encore, 		
-			$$\bigwedge_{k\in\{0,\cdots,b\}}\left(
-				\bigvee_{
-					\stackrel{j=\{min(start_k), \cdots,j'-1\}}{j'=\{j+1, \cdots,max(start_k+1)\}}
-					}
-				\lnot x_{i,j'-j} 
-			\right)$$
-	Intuitivement, il s'agit de cerner les cases vides plausibles entre deux bandes:		
-			\begin{center}						
-			\begin{tabular}{|c|c|c|c|c|c|}
-			\hline 
-			\black &   &    &   & \black & \black   \\ 			
-			\hline 
-			$\top$ & $\bot$ & $\bot$  & $\bot$ & $\top$ & $\top$ \\ 
-			\hline  
-			$\uparrow j$ & \multicolumn{3}{c|}{} & $\uparrow j'$ & \\ 
-			\hline
-			\end{tabular}
-			\end{center}
+\pagebreak
+
+
+
+%ça veut dire énumérer toutes les combinaison de n cases noires et m-n blanche pour chaque ligne)
+%(si tu ramènes ça au plateau
+%ça veut dire énumérer toutes les solutions qui respectent juste le nombre de case total exact
+%un coefficient binomial
+%donc ça craint
+%(le coefficient binomial est maximum quand dans C(m,n) n vaut m/2
+%
+%a => N N N B
+%b => D N N N B
+%c => D D N N N B
+%d => D D D N N N B
+%e => D D D D N N N B
+%.
+%.
+%z => .. D D D D D D D D N N N B
+%a ou b ou ... ou z
+%et a xor e xor ... xor z
+%et b xor f xor .. xor z
+%et c xor g xor ... xor z
+%
+%par contre il y a plus joli que le xor
+%
+%not( a et b) et not(a et c) et not(b et c)
+%
+%
+%énumérer les positions => O(n)
+%au moins une position => O(n)
+%au maximum une position => O(n²)
+%c'est la somme des nombres de i à j
+%
+%c'est la somme des nombres des n premier entier
+%voilà on a un algo polynomial
+%qui réduit vers un problème SAT
+%c'est un problème NP!
+%
+%
+%donc tout ça ne pose aucune contrainte sur l'ordre des bandes
+%pour palier à ça
+%si on a une bande a de taille 3
+%et une bande b de taille 2
+%si a commence à la postion n
+%alors b ne peut pas commencer avant la position n-2
+%donc
+%%a_n => (not b_n-m and ... and not b_n+1)
+%qui est aussi en O(n)
+%%a_n => (not b_0 and ... and not b_n+1) pardon
+%énumérer les positions => O(n)
+%au moins une position => O(n)
+%au maximum une position => O(n²)
+%énumérer les positions => O(n)
+%au moins une position => O(n)
+%au maximum une position => O(n²)
+%ordre des bandes => O(n)
+%AU FINAL
+%énumérer les positions => O(n)
+%au moins une position => O(n)
+%au maximum une position => O(n²)
+%ordre des bandes => O(n)
+
+\chapter{Question 3: Résolution 3, 2}
+
+L'implémentation de la solution a directement été pensée de façon générique, afin de répondre au plus grand nombre de problèmes.\\
+Suite à quoi, celle-ci fonctionne peut importe la taille de la grille $size$ et quelque soit le nombre de bandes $tape$, pourvu que les règles du jeu soient respectées. \\
+
+La \textbf{Question 3} est alors un cas particulier de la question suivante où $size=3$ et $tape=2$.\\
+
+L'implémentation, le codage et les diverses représentations sont décrites à la \textbf{Question 4} et valent pour la question présente.
+
+\chapter{Question 4: Résolution $size$ et $tape$}
+
+%Expliquez votre code
+%Comment vous représentez le problème de résolution de grille 
+%(les contraintes, la grille, variables, ...) en FNC.
+\section{Codage}
+%
+% this->_Loffset 
+% + 
+% pos * this->_problem->size * this->_problem->tapes 
+% + 
+% ID * this->_problem->size
+% + start
+
+Soit la caractérisation du problème au moyen des variables suivantes:
+\begin{description}
+\item[$size$] est la taille de la grille, le nombre de cases par colonne ou ligne.
+\item[$pos$] est le numéro de la ligne/colonne.
+\item[$start$] est le numéro de la colonne/ligne.
+\item[$ID$] est le numéro de la bande sur la ligne ou colonne.
+\item[$tapes$] est le nombre de bande possible.
+\item[$offset$] est un pointeur vers la première case après la bande précédente.\\
+\end{description}						
+
+
+Le problème est composé de $size$ cases.\\
+On sait que chaque case sera soit vraie ou fausse.\\
+On sait qu'au maximum, on aura $size \times tapes$ positions possible et donc au maximum $tapes\times size$ variables par ligne/colonne.\\
+Pour une bande $ID$ de la ligne $pos$ commençant à la colonne $start$, il faut aussi ajouter un certain $offset$.\\
+
+L'identifiant d'une bande à une certaine position est donné par:
+$$offset+ (pos \times size \times tapes) + (ID \times size) + start$$
+
+
+\section{Représentation}
+\subsection{Forme normale conjonctive}
+Une \textit{clause} sera représentée par un vecteur d'entier, où chaque entier est une variable calculée telle que décrite par le codage précédent.\\
+Une \textit{FNC} sera représentée par un vecteur de clause.				
+\lstset{style=Cpp, caption=clause et FNC, label=C:FNC_Clause}
+\begin{lstlisting}[mathescape=true]	
+	typedef std::vector<int> Clause;
+	typedef std::vector<Clause> FNC;
+\end{lstlisting}
+
+\subsection{Bande}
+Une bande d'une ligne est définie comme $LBande_{pos,ID,start}$, c'est-à-dire la variable entière:
+\lstset{style=Cpp, caption=Une bande comme variable, label=C:bande}
+\begin{lstlisting}[mathescape=true]
+//Bande
+template<Which D>
+inline int TAPE(size_t pos, size_t ID, size_t start) const{
+	if(D == Rows) return RTAPE(pos, ID, start);
+	else return CTAPE(pos, ID, start);
+}
+
+//Row Tape, LBande_{pos,ID,start}
+inline int RTAPE(size_t pos, size_t ID, size_t start) const{
+	return this->_Loffset + pos*this->_problem->size*this->_problem->tapes + start*this->_problem->tapes + ID;
+}
+
+//Column Tape, CBande_{pos,ID,start}
+inline int CTAPE(size_t pos, size_t ID, size_t start) const{
+	return this->_Coffset + pos*this->_problem->size*this->_problem->tapes + start*this->_problem->tapes + ID;
+}
+\end{lstlisting}
+
+\section{Implémentation des contraintes}
+
+Chaque bande implique des contraintes sur les cases voisines, par exemple:
+$$a \implies \{X_{i,0} \wedge X_{i,1} \wedge X_{i,2} \wedge \lnot X_{i,3}\}$$
+\lstset{style=Cpp, caption=Une bande en FNC, label=C:Boxes}
+\begin{lstlisting}[mathescape=true]
+template<Which D>
+inline void generateClauseBoxes(size_t pos, size_t ID, size_t start){
+	std::vector<int> lits;
+	//boxes belonging to the tape
+	for(size_t j = start; j < start + SIZE<D>(pos, ID); ++j){
+		lits.push_back(BOX<D>(pos, j));
+	}
+	//the box that should be excluded from the tape
+	if(start + SIZE<D>(pos, ID) < this->_problem->size){
+		lits.push_back(-BOX<D>(pos, start + SIZE<D>(pos, ID)));
+	}
+	implies(TAPE<D>(pos, ID, start), lits);
+}
+\end{lstlisting}
+où BOX dénote la numéro de la case:
+\lstset{style=Cpp, caption=Case, label=C:BOX}
+\begin{lstlisting}[mathescape=true]
+template<Which D>
+inline int BOX(size_t i, size_t j) const{
+	if(D == Rows) return RBOX(i, j);
+	else return CBOX(i, j);
+}
+
+inline int RBOX(size_t i, size_t j) const{
+	return i*this->_problem->size + j + 1;
+}
+
+inline int CBOX(size_t j, size_t i) const{
+	return i*this->_problem->size + j + 1;
+}
+\end{lstlisting}
+
+On transforme ensuite l'implication en FNC,
+$$(\lnot a \vee X_{i,0}) \wedge ( \lnot a \vee X_{i,1}) \wedge ( \lnot a \vee X_{i,2}) \wedge (\lnot a \vee \lnot X_{i,3})$$
+\lstset{style=Cpp, caption=Implication en FNC, label=C:implication1}
+\begin{lstlisting}[mathescape=true]
+inline void implies(int conjonction, const std::vector<int>& lits){
+	for (int lit : lits){
+		this->_final->push_back({-conjonction, lit});
+	}
+}
+\end{lstlisting}
+
+Le procédé est symétriquement identique pour les bandes appartenant aux colonnes.
+
+\subsection{Une position au maximum}
+Cette contrainte doit garantir qu'il ne puisse y avoir plus d'une position valide:
+$$a \implies (\lnot b \wedge \lnot c \wedge \lnot d \wedge ... )\; \wedge$$
+$$b \implies (\lnot c \wedge \lnot d \wedge \lnot e \wedge ... )\; \wedge$$
+$$c \implies (\lnot d \wedge \lnot e)\; \wedge ...$$
+Là aussi l'implication est donnée sous forme FNC (listing \ref{C:implication1}): 
+$$(\lnot a \vee \lnot b) \wedge (\lnot a \vee \lnot c) \wedge (\lnot a \vee \lnot d) \wedge ...$$
+
+\lstset{style=Cpp, caption=Au moins une position, label=C:atMostOne}
+\begin{lstlisting}[mathescape=true]
+template<Which D>
+inline void generateClauseAtMostOne(size_t pos, size_t ID, size_t start){
+	std::vector<int> lits;
+	for(size_t j = start + 1; j < this->_problem->size; ++j){
+		lits.push_back(-TAPE<D>(pos, ID, j));
+	}
+	implies(TAPE<D>(pos, ID, start), lits);
+}
+\end{lstlisting}
+
+\subsection{Au moins une position}
+
+Il s'agit de garantir qu'il y ait au moins une position occupée par une bande:
+$$(a \vee b \vee c \vee ...)$$
+\lstset{style=Cpp, caption=Au moins une position, label=C:atMostOne}
+\begin{lstlisting}[mathescape=true]
+Clause atLeastOne;
+for(size_t start = 0; start < this->_problem->size; ++start){
+	atLeastOne.push_back(TAPE<D>(pos, ID, start));
+}
+this->_final->push_back(atLeastOne);
+\end{lstlisting}
+
+\subsection{De l'ordre des bandes}
+
+Cette contrainte vise à faire respecter l'ordre des bandes:
+$$\left(A_k \implies \left( \bigwedge_{j}^{k+1} \lnot B_j \right)\right)\wedge \left( B_l \implies \left( \bigwedge_{j}^{l+1} \lnot C_j \right)\right)\wedge \cdots$$
+C'est-à-dire que, relativement à toute bande,  la bande suivante ne peut précéder la bande courante.\\
+Chaque implication est transformée en FNC et jointe aux autres.
+\lstset{style=Cpp, caption=Respect de l'ordre, label=C:order}
+\begin{lstlisting}[mathescape=true]
+// for a given tape
+template<Which D>
+inline void generateClauseOrder(size_t pos, size_t ID){
+  for(size_t start = 0; start + SIZE<D>(pos, ID) <= this->_problem->size; ++start){
+    generateClauseOrder<D>(pos, ID, start);	
+  }
+}
+// the ordering constraint is imposed according the other tapes
+template<Which D>
+inline void generateClauseOrder(size_t pos, size_t ID, size_t start){
+  std::vector<int> lits;
+  for(size_t j = 0; j <= start + SIZE<D>(pos, ID); ++j){
+    lits.push_back(-TAPE<D>(pos, ID+1, j));
+  }
+  implies(TAPE<D>(pos, ID, start), lits);
+}
+\end{lstlisting}
+
+\subsection{Case(s) vide(s) entre les bandes}
+On crée des clauses précisant l'existence de cases vides au voisinage des bandes.\\
+On distingue le cas où il y aurait des cases vides en début de ligne:
+\lstset{style=Cpp, caption=Cases vides (\textit{Hole}) avant la première bande , label=C:HoleBegin}
+\begin{lstlisting}[mathescape=true]
+template<Which D>
+inline void generateClauseHolesBegin(size_t pos){
+	// first tape	
+	const size_t ID = 0;
+	for(size_t start = 0; start + SIZE<D>(pos, ID) <= this->_problem->size; ++start){
+		std::vector<int> lits;
+		for(size_t d = 0; d < start; ++d){
+			lits.push_back(-BOX<D>(pos, d));
+		}
+		implies(TAPE<D>(pos, ID, start), lits);	
+	}
+}
+\end{lstlisting}
+De même, on évalue le cas où il y aurait des cases vides après la dernière bande:
+\lstset{style=Cpp, caption=Cases vides après la dernière bande, label=C:HoleEnd}
+\begin{lstlisting}[mathescape=true]
+template<Which D>
+inline void generateClauseHolesEnd(size_t pos){
+	// last tape
+	const size_t ID = TAPES<D>().at(pos).size() - 1;
+	for(size_t start = 0; start + SIZE<D>(pos, ID) <= this->_problem->size; ++start){
+		std::vector<int> lits;
+		for(size_t d = start + SIZE<D>(pos, ID); d < this->_problem->size; ++d){
+			lits.push_back(-BOX<D>(pos, d));
+		}
+		implies(TAPE<D>(pos, ID, start), lits);	
+	}
+}
+\end{lstlisting}
+
+Les dernier cas est celui de cases vides existantes entre deux bandes $ID$ et $ID+1$:
+\lstset{style=Cpp, caption=Cases vides entre 2 bandes, label=C:HoleBetween}
+\begin{lstlisting}[mathescape=true]
+template<Which D>
+inline void generateClauseHoles(size_t pos, size_t ID, size_t start){
+	for(size_t j = start + SIZE<D>(pos, ID) + 1; j < this->_problem->size; ++j){
+		std::vector<int> conjonction = {TAPE<D>(pos, ID, start), TAPE<D>(pos, ID+1, j)};
+		std::vector<int> lits;
+		for(size_t d = start + SIZE<D>(pos, ID); d < j; ++d){
+			lits.push_back(-BOX<D>(pos, d));
+		}
+		implies(conjonction, lits);
+	}
+}
+\end{lstlisting}
+
+\chapter{Question 5: Unicité}
+Afin de démontrer l'unicité d'une solution, il suffit de montrer qu'il n'en existe pas d'autre.\\
+
+On commence par résoudre le problème afin d'obtenir une première solution.\\
+On génère une contrainte à partir de la solution trouvée.\\
+On insère et ajoute la contrainte supplémentaire au solveur et on essaie de résoudre à nouveau le problème.\\ 
+
+Si miniSAT ne trouve pas de nouvelle solution, c'est que la première était unique.\\
+
+\section{Solution}
+Une solution est définie comme une grille où chaque case contient la valuation qui compose la solution.
+\lstset{style=Cpp, caption=Solution, label=C:Solution}
+\begin{lstlisting}[mathescape=true]
+typedef struct Solution{
+	size_t size = 0;
+	size_t tapes = 0;
+	std::vector<std::vector<int>> rows;
+	std::vector<std::vector<int>> cols;
+	std::vector<std::vector<int>> grid;
+} Solution;
+\end{lstlisting}
+
+\section{Test d'unicité}
+Le test d'unicité se déroule comme suit:
+\begin{itemize}
+\item Création d'une contrainte à partir de la solution supposée unique du problème.
+\item Ajout au problème de la nouvelle contrainte.
+\item Exécution du solveur.
+\item Évaluation de l'issue du solveur.\\ 
+\end{itemize}
+\lstset{style=Cpp, caption=Test d'unicité, label=C:Unicity}
+\begin{lstlisting}[mathescape=true]
+SolutionInhibitor inhibitor;
+FNC negation;
+// compute a solution and its negation as a clause
+inhibitor.inhibit(solution, negation, generator);
+// add clause to the solver as a new constraint
+SolverTranslator::toSolver(negation, solver);
+TERMINAL.print("Testing unicity ");
+solver.solve();
+printer.print(solver.okay());
+// evaluate results of the solver
+if(solver.okay()){
+	TERMINAL.println("NOT UNIQUE", TERMINAL.WARNING);
+	Solution solution2;
+	TERMINAL.println("");
+	// displays both solutions	
+	SolverTranslator::fromSolver(solver, problem, solution2);
+	printer.print(solution2, 1);
+	TERMINAL.println("");
+	solutions.push_back(solution2);
+}
+else{
+	TERMINAL.println("UNIQUE", TERMINAL.OKGREEN);
+}
+\end{lstlisting}
+
+La génération d'une nouvelle contrainte à partir de la première solution trouvée se fait en niant la valuation de toutes ses cases.
+\lstset{style=Cpp, caption=Création de la contrainte, label=C:Constraint}
+\begin{lstlisting}[mathescape=true]
+void inhibit(const Solution& solution, FNC& constraints, const ClausesGenerator& generator){
+	Clause clause;
+	for(size_t i = 0; i < solution.grid.size(); ++i){
+		for(size_t j = 0; j < solution.grid.at(i).size(); ++j){
+			// negation boxes
+			if(solution.grid.at(i).at(j) == 1){
+				clause.push_back(-generator.RBOX(i,j));
+			}else if (solution.grid.at(i).at(j) == -1){
+				clause.push_back(generator.RBOX(i,j));
+			}
+		}
+	}
+	// generates a new constraint
+	constraints.push_back(clause);
+}
+\end{lstlisting}
+
+\chapter{Question 6: Taille Variable}
+%Expliquez l’impact de la taille sur le temps de calcul/complexité (en termes de contraintes et variables).
+\section{Complexité}
+
+L'analyse des contraintes permettent de statuer sur la complexité de la solution au problème
+
+\begin{enumerate}
+\item L'énumération des positions se fait en $O(n)$
+\item Contraindre à au moins une position également
+\item Contraindre à n'avoir au maximum qu'une position se fait en $O(n²)$
+\item Garantir l'ordre des bandes est réalisé en $O(n)$
+\item Imposer le nombre de cases vides est atteint en $O(n²)$
 \end{enumerate}
 
-\subsection{Une bande}
-Le cas où il n'y a qu'une bande peut être vu comme la contraintes des possibles positions d'une bande relativement à un espace donné disponible.\\
-Cette interprétation permet alors de réutiliser le cas "une bande" comme sous problème résoluble du cas de multiples bandes.
-Soit l'exemple suivant:
-\begin{table}[H]
-    \begin{subtable}[B]{0.5\textwidth}
-    \centering
-		\begin{tabular}{|c|c|c|c|c|}
-			\hline
-			\black $\top$ & \black $\top$  & \color{white}$\top$ & \color{white}$\top$ & \color{white}$\top$ \\ 			
-			\hline
-		\end{tabular}
-		
-		\begin{tabular}{|c|c|c|c|c|}
-		\hline
-		\color{white}$\top$ & \black $\top$ & \black $\top$  & \color{white}$\top$ & \color{white}$\top$ \\ 			
-		\hline
-		\end{tabular}	
-		
-		\begin{tabular}{|c|c|c|c|c|}
-		\hline
-		 \color{white}$\top$ & \color{white}$\top$ & \black $\top$ & \black $\top$  & \color{white}$\top$ \\ 			
-		\hline
-		\end{tabular}
-		
-		\begin{tabular}{|c|c|c|c|c|}
-		\hline
-		 \color{white}$\top$ &  \color{white}$\top$ & \color{white}$\top$ & \black $\top$ & \black $\top$ \\ 			
-		\hline
-		\end{tabular}
-			
-        \caption{Positions d'une bande 2 dans un espace 5}
-        \label{table:exempleUneBande}
-    \end{subtable}
-    ~
-    \begin{subtable}[B]{0.5\textwidth}
-        \centering
-			\begin{tabular}{|c|c|c|c|c|}
-			\hline 
-			\grey $\top$ & $\bot$ & $\bot$  & $\bot$ & $\bot$ \\ 
-			\hline
-			\end{tabular}
-			
-			\begin{tabular}{|c|c|c|c|c|}
-			\hline 
-			$\bot$ & \grey $\top$ & $\bot$  & $\bot$ & $\bot$ \\ 
-			\hline
-			\end{tabular}
-			
-			\begin{tabular}{|c|c|c|c|c|}
-			\hline 
-			$\bot$ & $\bot$ & \grey $\top$  & $\bot$ & $\bot$ \\ 
-			\hline
-			\end{tabular}
-
-			\begin{tabular}{|c|c|c|c|c|}
-			\hline 
-			$\bot$ & $\bot$ & $\bot$ & \grey $\top$ & $\bot$\\ 
-			\hline
-			\end{tabular}
-			
-        \caption{Positions $start$ possibles}
-        \label{table:PosPossible}
-    \end{subtable}
-\end{table}
-
-Dans la table \ref{table:exempleUneBande}, on représente les différentes façons dont se positionne une bande de taille 2 dans un espace de taille 5, on y voit 4 possibilités.\\
-Le nombre de possibilités $p$ est donné relativement à la taille de l'espace $n$ dans lequel se positionne la bande et la taille de cette dernière:
-$$p = n-\mathtt{L}(pos,ID)+1$$
-où,
-\begin{itemize}
-\item[] $p$ est le nombre de position possible.
-\item[] $n$ est la taille de l'espace considéré.\\
-\end{itemize}
-On ne considère en réalité que la position de $start$ à laquelle commence la bande. Ce que décrit la table \ref{table:PosPossible}, on s'aperçoit que $start$ ne prendra jamais comme position la dernière colonne, ce dans tous les cas possibles de l'exemple. 
-
-\begin{table}[H]
-        \begin{subtable}[B]{0.5\textwidth}
-        \centering
-			\begin{tabular}{|c|c|c|c||c|}
-			\hline 
-			\color{white}$\lnot$\color{black}$a$ & $\lnot b$ & $\lnot c$  & $\lnot d$ & $\lnot e$ \\ 
-			\hline
-			\end{tabular}
-			
-			\begin{tabular}{|c|c|c|c||c|}
-			\hline 
-			$\lnot a$ & \color{white}$\lnot$\color{black}$b$ & $\lnot c$  & $\lnot d$ & $\lnot e$ \\ 
-			\hline
-			\end{tabular}
-			
-			\begin{tabular}{|c|c|c|c||c|}
-			\hline 
-			$\lnot a$ & $\lnot b$ & \color{white}$\lnot$\color{black}$c$  & $\lnot d$ & $\lnot e$ \\ 
-			\hline
-			\end{tabular}
-
-			\begin{tabular}{|c|c|c|c||c|}
-			\hline 
-			$\lnot a$ & $\lnot b$ & $\lnot c$  & \color{white}$\lnot$\color{black}$d$ & $\lnot e$ \\ 
-			\hline
-			\end{tabular}
-
-			\begin{tabular}{|c c c c c|}
-			\hline 
-			\multicolumn{4}{|c||}{$a \oplus b \oplus c \oplus d$} & $\wedge \lnot e$ \\ 
-			\hline
-			\end{tabular}			
-        \caption{Positions $start$ possibles}
-        \label{table:posXor}
-    \end{subtable}
-    ~
-	    \begin{subtable}[B]{0.5\textwidth}
-        \centering
-			\begin{tabular}{|c|c|c|c||c|c|}
-			\hline 
-			\grey \color{gray}$\lnot$\color{white}$a$ & \black \color{white}$\lnot b$ &
-			\black \color{white}$\lnot c$  & $\lnot d$ & $\lnot e$ & $\lnot f$\\ 
-			\hline
-			\end{tabular}
-			
-			\begin{tabular}{|c|c|c|c||c|c|}
-			\hline 
-			$\lnot a$ & \grey \color{gray}$\lnot$\color{white}$b$ & \black \color{white}$\lnot c$ &
-			\black \color{white}$\lnot d$  & $\lnot e$ & $\lnot f$\\ 
-			\hline
-			\end{tabular}
-			
-			\begin{tabular}{|c|c|c|c||c|c|}
-			\hline 
-			$\lnot a$ & $\lnot b$ &\grey \color{gray}$\lnot$\color{white}$c$ & 
-			\black \color{white}$\lnot d$ &\black \color{white}$\lnot e$  & $\lnot f$\\ 
-			\hline
-			\end{tabular}
-
-			\begin{tabular}{|c|c|c|c||c|c|}
-			\hline 
-			$\lnot a$ & $\lnot b$ & $\lnot c$  &\grey \color{gray}$\lnot$\color{white}$d$ & 
-			\black \color{white}$\lnot e$ &\black \color{white}$\lnot f$  \\ 
-			\hline
-			\end{tabular}
-
-			\begin{tabular}{|c c c c c c|}
-			\hline 
-			\multicolumn{4}{|c||}{$a \oplus b \oplus c \oplus d$} & \multicolumn{2}{c|}{$\wedge \lnot e \wedge \lnot f$} \\ 
-			\hline
-			\end{tabular}			
-			
-        \caption{Bande 3 dans espace 5}
-        \label{table:tailleE}
-    \end{subtable}
-\end{table}
-
-On peut tenter une première approche, soit les cases $a$, $b$, $c$, $d$, pouvant potentiellement être la case $start$ et la case $e$ qui ne le sera jamais. \\
-On a alors, sur la table \ref{table:posXor}: "Soit $a$ ou soit $b$ ou soit $c$ ou soit $d$ et pas $e$", c'est-à-dire $(a \oplus b \oplus c \oplus d) \wedge e$ où $\oplus$ représente le \textit{ou exclusif}.\\
-
-En excluant la dernière colonne, on obtient une matrice carrée dont la diagonale présente toutes les positions acceptables. 
-
-La taille de la matrice correspond au nombre des positions possibles $n-\mathtt{L}(pos,ID)+1$\\
-\begin{figure}[H]
-\centering
-\includegraphics[scale=0.3]{generationFNC.png}
-\caption{Génération de clauses}
-\label{fig:generationFNC}
-\end{figure}
-
-Pour cette matrice, il est possible de formuler la contrainte en forme normale conjonctive suivante:
-$$ (a \vee b \vee c \vee d ) \wedge (\lnot a \vee \lnot b) \wedge (\lnot a \vee \lnot c) \wedge (\lnot a \vee \lnot d)\wedge (\lnot b \vee \lnot c) \wedge (\lnot b \vee \lnot d)\wedge (\lnot c \vee \lnot d)$$   
-À quoi, on ajoutera la clause unaire $\lnot e$.\\
-
-Il est également à remarquer, comme sur la table \ref{table:tailleE}, que le nombre de clause représentant le nombre de colonne qui ne pourront jamais être une position $start$, est égal à:
-\begin{itemize}
-\item[]$\mathtt{L}(pos,ID) - 1$ pour une ligne 
-\item[]$\mathtt{C}(pos,ID)-1$ pour une colonne\\
-\end{itemize}
-
-Suite à ce qui précède, on obtient en concaténant les observations, la formulation suivante:\\
-\textbf{Pour toutes} lignes $i$, selon un espace $n$ défini,
-$$
-\left( \bigvee_{ j \in \{	0,...,p\} } LB_{i,ID,j} \right)
-\bigwedge_{\stackrel{j,j' \in \{0,\cdots,n\}}{j\leq j'}} (\lnot LB_{i,ID,j} \vee \lnot LB_{i,ID,j'})
-\bigwedge_{j \in {p,\cdots,n}}\left(\bigvee_{k=1}^{n=1}\lnot LB_{i,ID,j}\right)
-$$  
-où,
-\begin{itemize}
-\item[]$p = n-\mathtt{L}(pos,ID)+1$, soit le nombre de positions possibles
-\item[]$n$ est l'espace disponible
-\item[]$LB_{i,ID,j} \equiv LBande_{pos,ID,start}$
-\end{itemize}	
-
-\section{Représentation par bandes}
-\subsection{Observation: position minimale, maximale et sous-espace}
-
-Soit une colonne d'une longueur de 8 cases avec pour contrainte 3 bandes de taille 1, 2 et 1.
-
-La première bande pourra prendre la position minimum $x_{1,0}$ et maximum $x_{1,\alpha}$.
-
-La valeur de $\alpha$ peut être obtenue à partir du nombre de contraintes, de la taille des différentes bandes et de la règle selon laquelle deux bandes sont séparés d'au moins une case.\\
-
-Dans l'exemple, on obtient:
-\begin{itemize}
-\item[] $c = 3$, où $c$ est le nombre de contraintes
-\item[] $l = 8$ est la longueur de la colonne
-\item[] $L_{total} = 4$, est la longueur cumulée des bandes dans la colonne
-\item[] $\alpha = l-(L_{total}+(c-1))$
-\end{itemize}
-
-\begin{table}[H]
-\centering
-\begin{tabular}{|l||c|c|c|}
-\hline 
-0&\black • &  &  \\ 
-\hline 
-1 & &  &  \\ 
-\hline 
-2 & \grey &  & \black • \\ 
-\hline 
-3&\grey &  & \\ 
-\hline 
-4&\grey &  & \grey \\ 
-\hline 
-5&\grey &  & \grey \\ 
-\hline 
-6&\grey &  & \grey \\ 
-\hline 
-7&\grey &  & \grey \\ 
-\hline &&\\
-[-1.3em]\hline
-&$min$ &  & $max$ \\ 
-\hline 
-\end{tabular} 
-\caption{\label{bande8X1} position $max$ et $min$ sur une colonne $8\times1$ avec la contrainte 1 2 1}
-\end{table}
+\section{Temps de calcul}
 
 
-On voit dans le tableau \ref{bande8X1} qu'il est possible de connaitre \textit{a priori} le nombre restreint de positions possibles pour la première bande. 
-
-On voit aussi que chaque possibilité délimite un \textit{sous-espace} (zone grisée) au sein duquel devront être placées les bandes restantes.
-
-Il est alors possible d'appliquer la même analyse quant à la détermination de la position de la bande suivante au sein du sous-espace.
-
-Une fois les positions de la seconde bande déterminées, elles délimiteront l'espace restant pour la dernière bande. 
-
-Suite à cela, il est possible d'élaborer une méthode récursive, ou faussement récursive, au nombre d'itérations réduit, permettant d'énumérer les possibilités de placement des bandes.
-
-\subsection{Énumération récursive}
-\begin{table}[H]
-\centering
-\begin{tabular}{|c|c|c|l|c|l|c|c|c|}
-\hline 
-\grey &&\black & \multicolumn{5}{l|}{$\updownarrow \mathtt{L}(1,1) = 1$}& $x_{1,1}=\top$ \\ 
-\hline 
-\grey && & \multicolumn{5}{l|}{+1} & $x_{1,2}=\bot$ \\ 
-\hline
-\grey &&\grey &  &  & \multicolumn{3}{l|}{$\#$ itération}& $x_{1,3}=\bot$ \\ 
-\hline 
-\grey &&\grey &  & \black - & \multicolumn{3}{l|}{$\updownarrow \mathtt{L}(1,2) = 2$}& $x_{1,4}=\top$ \\ 
-\cline{1-5}\cline{9-9}
-\grey &&\grey &  & \black - & \multicolumn{3}{l|}{}& $x_{1,5}=\top$\\ 
-\hline 
-\grey &&\grey &  &  & \multicolumn{3}{l|}{+1} & $x_{1,6}=\bot$\\ 
-\hline 
-\grey &&\grey &  & \grey &  & \black - & $\updownarrow \mathtt{L}(1,3) = 1$ & $x_{1,7}=\top$ \\ 
-\hline 
-\grey &&\grey &  & \grey &  &  &  & $x_{1,8}=\bot$\\ 
-\hline
-\hline 
- $\bullet$&&$r_1$ &  & $r_1$ &  &$r_3$&  \multicolumn{2}{c|}{récursion}\\
-\hline
-\end{tabular}
-\caption{\label{EnumBande} Énumération récursive sur une colonne $8\times1$ avec la contrainte 1 2 1}
-\end{table}
-
- 
-\begin{algorithm}
-\caption{Énumération des bandes}
-\begin{algorithmic}
-\For{ligne $i \to n$}
-		\For{colonne $j \to n$}
-		nop();		
-		\EndFor			
-\EndFor
-\end{algorithmic}
-\end{algorithm}
-
-	
-						
+\chapter{Question 7: Génération}
 \end{document}

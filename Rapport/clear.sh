@@ -1,0 +1,1 @@
+rm -v *.aux *.lof *.log *.bbl *.blg *.toc *.synctex.gz
