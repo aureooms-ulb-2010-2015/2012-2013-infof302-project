@@ -1,17 +1,14 @@
 #include "ClausesGenerator.h"
 
-std::vector<std::vector<int>> ClausesGenerator::run(const Problem& problem){
+void ClausesGenerator::run(const Problem& problem, FNC& clauses){
+	this->_final = &clauses;
 	this->load(problem);
 	return this->generateClauses();
 }
 
-FNC ClausesGenerator::generateClauses(){
-	FNC result;
-	FNC fnc1 = generateAllHorizontalClauses();
-	result.insert(result.end(), fnc1.begin(), fnc1.end());
-	FNC fnc2 = generateAllVerticalClauses();
-	result.insert(result.end(), fnc2.begin(), fnc2.end());
-	return result;
+void ClausesGenerator::generateClauses(){
+	generateAllHorizontalClauses();
+	generateAllVerticalClauses();
 }
 
 int ClausesGenerator::BOX(size_t i, size_t j) const{
@@ -70,7 +67,7 @@ white holes between tapes:
 
 
 
-FNC ClausesGenerator::generateHorizontalClauseBoxes(size_t pos, size_t ID, size_t start){
+void ClausesGenerator::generateHorizontalClauseBoxes(size_t pos, size_t ID, size_t start){
 	std::vector<int> lits;
 	for(size_t j = start; j < start + L(pos, ID); ++j){
 		lits.push_back(BOX(pos, j));
@@ -78,144 +75,114 @@ FNC ClausesGenerator::generateHorizontalClauseBoxes(size_t pos, size_t ID, size_
 	if(start + L(pos, ID) < this->_problem->size){
 		lits.push_back(-BOX(pos, start + L(pos, ID)));
 	}
-	return this->implies(LBande(pos, ID, start), lits);
+	implies(LBande(pos, ID, start), lits);
 }
 
-FNC ClausesGenerator::generateHorizontalClauseAtMostOne(size_t pos, size_t ID, size_t start){
+void ClausesGenerator::generateHorizontalClauseAtMostOne(size_t pos, size_t ID, size_t start){
 	std::vector<int> lits;
 	for(size_t j = start + 1; j < this->_problem->size; ++j){
 		lits.push_back(-LBande(pos, ID, j));
 	}
-	return this->implies(LBande(pos, ID, start), lits);
+	implies(LBande(pos, ID, start), lits);
 }
 
-FNC ClausesGenerator::generateHorizontalClause(size_t pos, size_t ID){
-	FNC result;
+void ClausesGenerator::generateHorizontalClause(size_t pos, size_t ID){
 
 	for(size_t start = 0; start + L(pos, ID) <= this->_problem->size; ++start){
-		FNC fnc = generateHorizontalClauseBoxes(pos, ID, start);
-		result.insert(result.end(), fnc.begin(), fnc.end());
+		generateHorizontalClauseBoxes(pos, ID, start);
 	}
 
 	for(size_t start = this->_problem->size - L(pos, ID) + 1; start < this->_problem->size; ++start){
-		result.push_back({-LBande(pos, ID, start)});
+		this->_final->push_back({-LBande(pos, ID, start)});
 	}
 
 	Clause atLeastOne;
 	for(size_t start = 0; start < this->_problem->size; ++start){
 		atLeastOne.push_back(LBande(pos, ID, start));
 	}
-	result.push_back(atLeastOne);
+	this->_final->push_back(atLeastOne);
 
 	for(size_t start = 0; start < this->_problem->size - 1; ++start){
-		FNC fnc = generateHorizontalClauseAtMostOne(pos, ID, start);
-		result.insert(result.end(), fnc.begin(), fnc.end());
+		generateHorizontalClauseAtMostOne(pos, ID, start);
 	}
-
-	return result;
 }
 
-FNC ClausesGenerator::generateHorizontalClauseOrder(size_t pos, size_t ID, size_t start){
+void ClausesGenerator::generateHorizontalClauseOrder(size_t pos, size_t ID, size_t start){
 	std::vector<int> lits;
 	for(size_t j = 0; j <= start + L(pos, ID); ++j){
 		lits.push_back(-LBande(pos, ID+1, j));
 	}
-	return this->implies(LBande(pos, ID, start), lits);
+	implies(LBande(pos, ID, start), lits);
 }
 
-FNC ClausesGenerator::generateHorizontalClauseOrder(size_t pos, size_t ID){
-	FNC result;
+void ClausesGenerator::generateHorizontalClauseOrder(size_t pos, size_t ID){
 	for(size_t start = 0; start + L(pos, ID) <= this->_problem->size; ++start){
-		FNC fnc = generateHorizontalClauseOrder(pos, ID, start);
-		result.insert(result.end(), fnc.begin(), fnc.end());		
+		generateHorizontalClauseOrder(pos, ID, start);	
 	}
-	return result;
 }
 
-FNC ClausesGenerator::generateHorizontalClauseHoles(size_t pos, size_t ID, size_t start){
-	FNC result;
+void ClausesGenerator::generateHorizontalClauseHoles(size_t pos, size_t ID, size_t start){
 	for(size_t j = start + L(pos, ID) + 1; j < this->_problem->size; ++j){
 		std::vector<int> conjonction = {LBande(pos, ID, start), LBande(pos, ID+1, j)};
 		std::vector<int> lits;
 		for(size_t d = start + L(pos, ID); d < j; ++d){
 			lits.push_back(-BOX(pos, d));
 		}
-		FNC fnc = this->implies(conjonction, lits);
-		result.insert(result.end(), fnc.begin(), fnc.end());
+		implies(conjonction, lits);
 	}
-	return result;
 }
 
-FNC ClausesGenerator::generateHorizontalClauseHoles(size_t pos, size_t ID){
-	FNC result;
+void ClausesGenerator::generateHorizontalClauseHoles(size_t pos, size_t ID){
 	for(size_t start = 0; start + L(pos, ID) <= this->_problem->size; ++start){
-		FNC fnc = generateHorizontalClauseHoles(pos, ID, start);
-		result.insert(result.end(), fnc.begin(), fnc.end());		
+		generateHorizontalClauseHoles(pos, ID, start);		
 	}
-	return result;
 }
 
-FNC ClausesGenerator::generateHorizontalClauseHolesBegin(size_t pos){
-	FNC result;
+void ClausesGenerator::generateHorizontalClauseHolesBegin(size_t pos){
 	const size_t ID = 0;
 	for(size_t start = 0; start + L(pos, ID) <= this->_problem->size; ++start){
 		std::vector<int> lits;
 		for(size_t d = 0; d < start; ++d){
 			lits.push_back(-BOX(pos, d));
 		}
-		FNC fnc = this->implies(LBande(pos, ID, start), lits);
-		result.insert(result.end(), fnc.begin(), fnc.end());		
+		implies(LBande(pos, ID, start), lits);	
 	}
-	return result;
 }
 
-FNC ClausesGenerator::generateHorizontalClauseHolesEnd(size_t pos){
-	FNC result;
+void ClausesGenerator::generateHorizontalClauseHolesEnd(size_t pos){
 	const size_t ID = this->_problem->rows.at(pos).size() - 1;
 	for(size_t start = 0; start + L(pos, ID) <= this->_problem->size; ++start){
 		std::vector<int> lits;
 		for(size_t d = start + L(pos, ID); d < this->_problem->size; ++d){
 			lits.push_back(-BOX(pos, d));
 		}
-		FNC fnc = this->implies(LBande(pos, ID, start), lits);
-		result.insert(result.end(), fnc.begin(), fnc.end());		
+		implies(LBande(pos, ID, start), lits);	
 	}
-	return result;
 }
 
-FNC ClausesGenerator::generateHorizontalClause(size_t pos){
-	FNC result;
+void ClausesGenerator::generateHorizontalClause(size_t pos){
 	for(size_t ID = 0; ID < this->_problem->rows.at(pos).size(); ++ID){
-		FNC fnc = generateHorizontalClause(pos, ID);
-		result.insert(result.end(), fnc.begin(), fnc.end());		
+		generateHorizontalClause(pos, ID);
 	}
 
 	for(size_t ID = 0; ID < this->_problem->rows.at(pos).size() - 1; ++ID){
-		FNC fnc = generateHorizontalClauseOrder(pos, ID);
-		result.insert(result.end(), fnc.begin(), fnc.end());		
+		generateHorizontalClauseOrder(pos, ID);
 	}
-	FNC fnc1 = generateHorizontalClauseHolesBegin(pos);
-	result.insert(result.end(), fnc1.begin(), fnc1.end());
+	generateHorizontalClauseHolesBegin(pos);
 	for(size_t ID = 0; ID < this->_problem->rows.at(pos).size() - 1; ++ID){
-		FNC fnc = generateHorizontalClauseHoles(pos, ID);
-		result.insert(result.end(), fnc.begin(), fnc.end());		
+		generateHorizontalClauseHoles(pos, ID);		
 	}
-	FNC fnc2 = generateHorizontalClauseHolesEnd(pos);
-	result.insert(result.end(), fnc2.begin(), fnc2.end());
-	return result;
+	generateHorizontalClauseHolesEnd(pos);
 }
-FNC ClausesGenerator::generateAllHorizontalClauses(){
-	FNC result;
+void ClausesGenerator::generateAllHorizontalClauses(){
 	for(size_t pos = 0; pos < this->_problem->size; ++pos){
-		FNC fnc = generateHorizontalClause(pos);
-		result.insert(result.end(), fnc.begin(), fnc.end());		
+		generateHorizontalClause(pos);		
 	}
-	return result;
 }
 
 
 
-FNC ClausesGenerator::generateVerticalClauseBoxes(size_t pos, size_t ID, size_t start){
+void ClausesGenerator::generateVerticalClauseBoxes(size_t pos, size_t ID, size_t start){
 	std::vector<int> lits;
 	for(size_t i = start; i < start + C(pos, ID); ++i){
 		lits.push_back(BOX(i, pos));
@@ -223,164 +190,130 @@ FNC ClausesGenerator::generateVerticalClauseBoxes(size_t pos, size_t ID, size_t 
 	if(start + C(pos, ID) < this->_problem->size){
 		lits.push_back(-BOX(start + C(pos, ID), pos));
 	}
-	return this->implies(CBande(pos, ID, start), lits);
+	implies(CBande(pos, ID, start), lits);
 }
 
-FNC ClausesGenerator::generateVerticalClauseAtMostOne(size_t pos, size_t ID, size_t start){
+void ClausesGenerator::generateVerticalClauseAtMostOne(size_t pos, size_t ID, size_t start){
 	std::vector<int> lits;
 	for(size_t i = start + 1; i < this->_problem->size; ++i){
 		lits.push_back(-CBande(pos, ID, i));
 	}
-	return this->implies(CBande(pos, ID, start), lits);
+	implies(CBande(pos, ID, start), lits);
 }
 
-FNC ClausesGenerator::generateVerticalClause(size_t pos, size_t ID){
-	FNC result;
+void ClausesGenerator::generateVerticalClause(size_t pos, size_t ID){
 
 	for(size_t start = 0; start + C(pos, ID) <= this->_problem->size; ++start){
-		FNC fnc = generateVerticalClauseBoxes(pos, ID, start);
-		result.insert(result.end(), fnc.begin(), fnc.end());
+		generateVerticalClauseBoxes(pos, ID, start);
 	}
 
 	for(size_t start = this->_problem->size - C(pos, ID) + 1; start < this->_problem->size; ++start){
-		result.push_back({-CBande(pos, ID, start)});
+		this->_final->push_back({-CBande(pos, ID, start)});
 	}
 
 	Clause atLeastOne;
 	for(size_t start = 0; start < this->_problem->size; ++start){
 		atLeastOne.push_back(CBande(pos, ID, start));
 	}
-	result.push_back(atLeastOne);
+	this->_final->push_back(atLeastOne);
 
 	for(size_t start = 0; start < this->_problem->size - 1; ++start){
-		FNC fnc = generateVerticalClauseAtMostOne(pos, ID, start);
-		result.insert(result.end(), fnc.begin(), fnc.end());
+		generateVerticalClauseAtMostOne(pos, ID, start);
 	}
-
-	return result;
 }
 
-FNC ClausesGenerator::generateVerticalClauseOrder(size_t pos, size_t ID, size_t start){
+void ClausesGenerator::generateVerticalClauseOrder(size_t pos, size_t ID, size_t start){
 	std::vector<int> lits;
 	for(size_t i = 0; i <= start + C(pos, ID); ++i){
 		lits.push_back(-CBande(pos, ID+1, i));
 	}
-	return this->implies(CBande(pos, ID, start), lits);
+	implies(CBande(pos, ID, start), lits);
 }
 
-FNC ClausesGenerator::generateVerticalClauseOrder(size_t pos, size_t ID){
-	FNC result;
+void ClausesGenerator::generateVerticalClauseOrder(size_t pos, size_t ID){
 	for(size_t start = 0; start + C(pos, ID) <= this->_problem->size; ++start){
-		FNC fnc = generateVerticalClauseOrder(pos, ID, start);
-		result.insert(result.end(), fnc.begin(), fnc.end());		
+		generateVerticalClauseOrder(pos, ID, start);	
 	}
-	return result;
 }
 
-FNC ClausesGenerator::generateVerticalClauseHoles(size_t pos, size_t ID, size_t start){
-	FNC result;
+void ClausesGenerator::generateVerticalClauseHoles(size_t pos, size_t ID, size_t start){
 	for(size_t i = start + C(pos, ID) + 1; i < this->_problem->size; ++i){
 		std::vector<int> conjonction = {CBande(pos, ID, start), CBande(pos, ID+1, i)};
 		std::vector<int> lits;
 		for(size_t d = start + C(pos, ID); d < i; ++d){
 			lits.push_back(-BOX(d, pos));
 		}
-		FNC fnc = this->implies(conjonction, lits);
-		result.insert(result.end(), fnc.begin(), fnc.end());
+		implies(conjonction, lits);
 	}
-	return result;
 }
 
-FNC ClausesGenerator::generateVerticalClauseHoles(size_t pos, size_t ID){
-	FNC result;
+void ClausesGenerator::generateVerticalClauseHoles(size_t pos, size_t ID){
 	for(size_t start = 0; start + C(pos, ID) <= this->_problem->size; ++start){
-		FNC fnc = generateVerticalClauseHoles(pos, ID, start);
-		result.insert(result.end(), fnc.begin(), fnc.end());		
+		generateVerticalClauseHoles(pos, ID, start);	
 	}
-	return result;
 }
 
-FNC ClausesGenerator::generateVerticalClauseHolesBegin(size_t pos){
-	FNC result;
+void ClausesGenerator::generateVerticalClauseHolesBegin(size_t pos){
 	const size_t ID = 0;
 	for(size_t start = 0; start + C(pos, ID) <= this->_problem->size; ++start){
 		std::vector<int> lits;
 		for(size_t d = 0; d < start; ++d){
 			lits.push_back(-BOX(d, pos));
 		}
-		FNC fnc = this->implies(CBande(pos, ID, start), lits);
-		result.insert(result.end(), fnc.begin(), fnc.end());		
+		implies(CBande(pos, ID, start), lits);	
 	}
-	return result;
 }
 
-FNC ClausesGenerator::generateVerticalClauseHolesEnd(size_t pos){
-	FNC result;
+void ClausesGenerator::generateVerticalClauseHolesEnd(size_t pos){
 	const size_t ID = this->_problem->cols.at(pos).size() - 1;
 	for(size_t start = 0; start + C(pos, ID) <= this->_problem->size; ++start){
 		std::vector<int> lits;
 		for(size_t d = start + C(pos, ID); d < this->_problem->size; ++d){
 			lits.push_back(-BOX(d, pos));
 		}
-		FNC fnc = this->implies(CBande(pos, ID, start), lits);
-		result.insert(result.end(), fnc.begin(), fnc.end());		
+		implies(CBande(pos, ID, start), lits);	
 	}
-	return result;
 }
 
-FNC ClausesGenerator::generateVerticalClause(size_t pos){
-	FNC result;
+void ClausesGenerator::generateVerticalClause(size_t pos){
 	for(size_t ID = 0; ID < this->_problem->cols.at(pos).size(); ++ID){
-		FNC fnc = generateVerticalClause(pos, ID);
-		result.insert(result.end(), fnc.begin(), fnc.end());		
+		generateVerticalClause(pos, ID);
 	}
 
 	for(size_t ID = 0; ID < this->_problem->cols.at(pos).size() - 1; ++ID){
-		FNC fnc = generateVerticalClauseOrder(pos, ID);
-		result.insert(result.end(), fnc.begin(), fnc.end());		
+		generateVerticalClauseOrder(pos, ID);	
 	}
 
-	FNC fnc1 = generateVerticalClauseHolesBegin(pos);
-	result.insert(result.end(), fnc1.begin(), fnc1.end());
+	generateVerticalClauseHolesBegin(pos);
 	for(size_t ID = 0; ID < this->_problem->cols.at(pos).size() - 1; ++ID){
-		FNC fnc = generateVerticalClauseHoles(pos, ID);
-		result.insert(result.end(), fnc.begin(), fnc.end());		
+		generateVerticalClauseHoles(pos, ID);	
 	}
-	FNC fnc2 = generateVerticalClauseHolesEnd(pos);
-	result.insert(result.end(), fnc2.begin(), fnc2.end());
-	return result;
+	generateVerticalClauseHolesEnd(pos);
 }
 
-FNC ClausesGenerator::generateAllVerticalClauses(){
-	FNC result;
+void ClausesGenerator::generateAllVerticalClauses(){
 	for(size_t pos = 0; pos < this->_problem->size; ++pos){
-		FNC fnc = generateVerticalClause(pos);
-		result.insert(result.end(), fnc.begin(), fnc.end());		
+		generateVerticalClause(pos);
 	}
-	return result;
 }
 
 
 
-FNC ClausesGenerator::implies(int conjonction, const std::vector<int>& lits){
-	FNC result;
+void ClausesGenerator::implies(int conjonction, const std::vector<int>& lits){
 	for (int lit : lits){
-		result.push_back({-conjonction, lit});
+		this->_final->push_back({-conjonction, lit});
 	}
-	return result;
 }
 
-FNC ClausesGenerator::implies(const std::vector<int>& conjonction, const std::vector<int>& lits){
-	FNC result;
+void ClausesGenerator::implies(const std::vector<int>& conjonction, const std::vector<int>& lits){
 	std::vector<int> negation;
 	for(int lit : conjonction){
 		negation.push_back(-lit);
 	}
 	for(int lit : lits){
-		result.push_back(negation);
-		result.back().push_back(lit);
+		this->_final->push_back(negation);
+		this->_final->back().push_back(lit);
 	}
-	return result;
 }
 
 void ClausesGenerator::load(const Problem& problem){

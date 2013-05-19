@@ -82,7 +82,8 @@ void RUN(){
 
 	std::string filename = ARGV[0];
 	Problem problem = parser.parse(filename);
-	FNC clauses = generator.run(problem);
+	FNC clauses;
+	generator.run(problem, clauses);
 
 	SolverTranslator::toSolver(clauses, solver);
 
