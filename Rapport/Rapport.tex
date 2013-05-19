@@ -716,7 +716,7 @@ où,
 \chapter{Question 3: Résolution 3, 2}
 
 L'implémentation de la solution a directement été pensée de façon générique, afin de répondre au plus grand nombre de problèmes.\\
-Suite à quoi, celle-ci fonctionne peut importe la taille de la grille $size$ et quelque soit le nombre de bandes $tape$, pourvu que les règles du jeu soient respectées. \\
+Suite à quoi, celle-ci fonctionne peu importe la taille de la grille $size$ et quelque soit le nombre de bandes $tape$, pourvu que les règles du jeu soient respectées. \\
 
 La \textbf{Question 3} est alors un cas particulier de la question suivante où $size=3$ et $tape=2$.\\
 
@@ -757,13 +757,47 @@ $$offset+ (pos \times size \times tapes) + (ID \times size) + start$$
 
 
 \section{Représentation}
+\subsection{Case, ligne et colonne}
+\subsubsection{Case}
+Une case est représentée par son \textit{adresse}, par exemple: la case à la $i^{eme}$ ligne ($i\times size$), à la position $j+1$, car la ligne $1$ porte l'indice $0$.
+
+De même, vis-à-vis d'une colonne: la case à la $j^{eme}$ colonne ($j\times size$), à la position $i+1$, car la colonne $1$ porte l'indice $0$
+\lstset{style=Cpp, caption=Cases, label=C:Cases}
+\begin{lstlisting}[mathescape=true]
+// Row Box
+inline int ClausesGenerator::RBOX(size_t i, size_t j) const{
+	return i*this->_problem->size + j + 1;
+}
+// Column Box
+inline int CBOX(size_t j, size_t i) const{
+	return i*this->_problem->size + j + 1;
+}
+\end{lstlisting}
+
+
+\subsubsection{Ligne et colonne}
+Une colonne ou ligne est représentée comme un vecteur d'entier.
+\lstset{style=Cpp, caption=Ligne et colonne, label=C:RowColumn}
+\begin{lstlisting}[mathescape=true]
+
+// Row
+inline const std::vector<std::vector<int>>& ROWS() const{
+	return this->_problem->rows;
+}
+
+// Column
+inline const std::vector<std::vector<int>>& COLS() const{
+	return this->_problem->cols;
+}
+\end{lstlisting}
+
 \subsection{Forme normale conjonctive}
 Une \textit{clause} sera représentée par un vecteur d'entier, où chaque entier est une variable calculée telle que décrite par le codage précédent.\\
 Une \textit{FNC} sera représentée par un vecteur de clause.				
 \lstset{style=Cpp, caption=clause et FNC, label=C:FNC_Clause}
 \begin{lstlisting}[mathescape=true]	
-	typedef std::vector<int> Clause;
-	typedef std::vector<Clause> FNC;
+typedef std::vector<int> Clause;
+typedef std::vector<Clause> FNC;
 \end{lstlisting}
 
 \subsection{Bande}
@@ -789,7 +823,7 @@ inline int CTAPE(size_t pos, size_t ID, size_t start) const{
 \end{lstlisting}
 
 \section{Implémentation des contraintes}
-
+\subsection{Implication des bandes}
 Chaque bande implique des contraintes sur les cases voisines, par exemple:
 $$a \implies \{X_{i,0} \wedge X_{i,1} \wedge X_{i,2} \wedge \lnot X_{i,3}\}$$
 \lstset{style=Cpp, caption=Une bande en FNC, label=C:Boxes}
