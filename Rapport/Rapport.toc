@@ -1,19 +1,47 @@
 \select@language {french}
-\contentsline {chapter}{\numberline {1}\IeC {\'E}num\IeC {\'e}ration 3,2}{2}
-\contentsline {section}{\numberline {1.1}Probl\IeC {\`e}me et notation}{2}
-\contentsline {subsection}{\numberline {1.1.1}Grille}{2}
-\contentsline {subsection}{\numberline {1.1.2}Variables}{3}
-\contentsline {subsection}{\numberline {1.1.3}S\IeC {\'e}mantique}{3}
-\contentsline {subsection}{\numberline {1.1.4}Codage}{3}
-\contentsline {section}{\numberline {1.2}Contraintes}{3}
-\contentsline {section}{\numberline {1.3}Parcours et repr\IeC {\'e}sentation par \IeC {\'e}num\IeC {\'e}ration}{4}
-\contentsline {chapter}{\numberline {2}Les Bandes}{7}
-\contentsline {section}{\numberline {2.1}Probl\IeC {\`e}me et notation}{7}
-\contentsline {subsection}{\numberline {2.1.1}Variables}{7}
-\contentsline {subsection}{\numberline {2.1.2}S\IeC {\'e}mantique}{7}
-\contentsline {subsection}{\numberline {2.1.3}Codage}{8}
-\contentsline {section}{\numberline {2.2}Contraintes}{8}
-\contentsline {subsection}{\numberline {2.2.1}Une bande}{9}
-\contentsline {section}{\numberline {2.3}Repr\IeC {\'e}sentation par bandes}{11}
-\contentsline {subsection}{\numberline {2.3.1}Observation: position minimale, maximale et sous-espace}{11}
-\contentsline {subsection}{\numberline {2.3.2}\IeC {\'E}num\IeC {\'e}ration r\IeC {\'e}cursive}{12}
+\contentsline {chapter}{\numberline {1}Question 1: \IeC {\'E}num\IeC {\'e}ration 3,2}{3}
+\contentsline {section}{\numberline {1.1}Probl\IeC {\`e}me et notation}{3}
+\contentsline {subsection}{\numberline {1.1.1}Grille}{3}
+\contentsline {subsection}{\numberline {1.1.2}Variables}{4}
+\contentsline {subsection}{\numberline {1.1.3}S\IeC {\'e}mantique}{4}
+\contentsline {subsection}{\numberline {1.1.4}Codage}{4}
+\contentsline {section}{\numberline {1.2}Contraintes}{4}
+\contentsline {section}{\numberline {1.3}Parcours et repr\IeC {\'e}sentation par \IeC {\'e}num\IeC {\'e}ration}{5}
+\contentsline {chapter}{\numberline {2}Question 2: Les Bandes}{8}
+\contentsline {section}{\numberline {2.1}Probl\IeC {\`e}me et notation}{8}
+\contentsline {subsection}{\numberline {2.1.1}Variables}{8}
+\contentsline {subsection}{\numberline {2.1.2}S\IeC {\'e}mantique}{8}
+\contentsline {section}{\numberline {2.2}Contraintes}{9}
+\contentsline {subsection}{\numberline {2.2.1}\IeC {\'E}num\IeC {\'e}ration des possibles}{9}
+\contentsline {subsection}{\numberline {2.2.2}Au moins une position}{10}
+\contentsline {subsection}{\numberline {2.2.3}Une position au maximum}{10}
+\contentsline {subsection}{\numberline {2.2.4}De l'ordre des bandes}{11}
+\contentsline {subsection}{\numberline {2.2.5}Case(s) vide(s) entre les bandes}{12}
+\contentsline {subsection}{\numberline {2.2.6}Contraintes implicites}{12}
+\contentsline {subsubsection}{De l'interd\IeC {\'e}pendance des contraintes de lignes et de colonnes}{12}
+\contentsline {subsection}{\numberline {2.2.7}Remarques}{13}
+\contentsline {chapter}{\numberline {3}Question 3: R\IeC {\'e}solution 3, 2}{14}
+\contentsline {chapter}{\numberline {4}Question 4: R\IeC {\'e}solution $size$ et $tape$}{15}
+\contentsline {section}{\numberline {4.1}Codage}{15}
+\contentsline {section}{\numberline {4.2}Repr\IeC {\'e}sentation}{15}
+\contentsline {subsection}{\numberline {4.2.1}Case, ligne et colonne}{15}
+\contentsline {subsubsection}{Case}{15}
+\contentsline {subsubsection}{Ligne et colonne}{16}
+\contentsline {subsection}{\numberline {4.2.2}Forme normale conjonctive}{16}
+\contentsline {subsection}{\numberline {4.2.3}Bande}{16}
+\contentsline {section}{\numberline {4.3}Impl\IeC {\'e}mentation des contraintes}{17}
+\contentsline {subsection}{\numberline {4.3.1}Implication des bandes}{17}
+\contentsline {subsection}{\numberline {4.3.2}Une position au maximum}{18}
+\contentsline {subsection}{\numberline {4.3.3}Au moins une position}{19}
+\contentsline {subsection}{\numberline {4.3.4}De l'ordre des bandes}{19}
+\contentsline {subsection}{\numberline {4.3.5}Case(s) vide(s) entre les bandes}{20}
+\contentsline {chapter}{\numberline {5}Question 5: Unicit\IeC {\'e}}{22}
+\contentsline {section}{\numberline {5.1}Solution}{22}
+\contentsline {section}{\numberline {5.2}Test d'unicit\IeC {\'e}}{22}
+\contentsline {chapter}{\numberline {6}Question 6: Taille Variable}{24}
+\contentsline {section}{\numberline {6.1}G\IeC {\'e}n\IeC {\'e}ralisation}{24}
+\contentsline {section}{\numberline {6.2}Complexit\IeC {\'e}}{24}
+\contentsline {chapter}{\numberline {7}Question 7: G\IeC {\'e}n\IeC {\'e}ration}{25}
+\contentsline {chapter}{\numberline {8}Usage}{26}
+\contentsline {section}{\numberline {8.1}Compilation}{26}
+\contentsline {section}{\numberline {8.2}Execution}{26}

@@ -77,7 +77,41 @@ backgroundcolor=\color{lightgray},
   identifierstyle=\color{blue},
   stringstyle=\color{orange},
 }
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% verbatim boxed text
+\usepackage{fancyvrb,fancybox,calc} 
+%\usepackage[svgnames]{xcolor} 
+\newenvironment{bash}{\VerbatimEnvironment% 
+
+  \noindent
+  %      {\columnwidth-\leftmargin-\rightmargin-2\fboxsep-2\fboxrule-4pt} 
+  \begin{Sbox} 
+  \begin{minipage}[c]{\textwidth}%\linewidth-2\fboxsep-2\fboxrule-4pt}    
+  \begin{Verbatim}
+}{% 
+  \end{Verbatim}  
+  \end{minipage}   
+  \end{Sbox} 
+  \fcolorbox{gray}{LightGray}{\TheSbox} 
+} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\color{declared-color}
+% verbatim boxed text
+\newenvironment{command}{\VerbatimEnvironment% 
+
+  \noindent
+  %      {\columnwidth-\leftmargin-\rightmargin-2\fboxsep-2\fboxrule-4pt} 
+  \begin{Sbox} 
+  \begin{minipage}[c]{\textwidth}%\linewidth-2\fboxsep-2\fboxrule-4pt} 
+  \color{white}   
+  \begin{Verbatim}
+}{% 
+  \end{Verbatim}  
+  \end{minipage}   
+  \end{Sbox} 
+  \fcolorbox{black}{gray}{\TheSbox} 
+} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
 
@@ -91,7 +125,7 @@ backgroundcolor=\color{lightgray},
 \textbf{\textsc{Faculté des Sciences}}\\
 \textbf{\textsc{Département d'Informatique}}
 \vfill{}\vfill{}
-\begin{center}{\Huge INFO-F-302 - Logique Informatique \\Projet: Le jeu Pattern et Utilisation de MiniSAT}\end{center}{\Huge \par}
+\begin{center}{\Huge INFO-F-302 - Logique Informatique \\Projet: Le jeu Pattern\\ et\\ Utilisation de MiniSAT}\end{center}{\Huge \par}
 \begin{center}{\large \textsc{Ooms} Aurélien, \textsc{Sonnet} Jean-Baptiste}\end{center}{\Huge \par}
 \vfill{}\vfill{}
 \vfill{}\vfill{}\enlargethispage{3cm}
@@ -176,7 +210,7 @@ Pour miniSAT, il faut coder les propositions par des entiers.
 La taille d'une grille est de $3\times3$, on codera en base 3.
 
 
-Pour  $x_{i,j,v}$ on aurait par exemple le codage: $(i \times n²)+(j \times n)+(v+1)$
+Pour  $x_{i,j}$ on aurait par exemple le codage: $(i \times 3)+ j$
 
 
 \section{Contraintes}
@@ -200,7 +234,7 @@ $$\bigwedge_{i \in \{0,1,2\}} \bigwedge_{j \in \{0,1,2\}} \bigwedge_{b_i^{(k)}, 
 	x_{i,j} \vee \lnot x_{i,j}
 \right)$$
 
-\item \textbf{Pour toute} ligne $i$, \textbf{pour toute} bande $b_i^{(k)}, k\in\{1,2\}$ associées à la ligne, \textbf{il existe} \textit{autant} de cases vraies $x_{i,j}$ que ne l'exprime la taille de la bande. 
+\item \textbf{Pour toute} ligne $i$, \textbf{pour toute} bande de taille $b$ associée à la ligne, \textbf{il existe} \textit{autant} de cases vraies $x_{i,j}$ que ne l'exprime la taille de chaque bande. 
 
 Cela donne au cas par cas:
 	\begin{enumerate}
@@ -217,7 +251,7 @@ Cela donne au cas par cas:
 			\end{center}
 
 			\item Pour toute ligne $i$ où $b=2$, 
-			$$(\lnot x_{i,0} \vee \lnot x_{i,2}) \wedge (x_{i,0} \vee x_{i,2}) \wedge x_{i,1}$$
+			$$(\lnot x_{i,0} \vee \lnot x_{i,2}) \wedge x_{i,1}\wedge (x_{i,0} \vee x_{i,2}) $$
 			\begin{center}						
 			\begin{tabular}{|c|c|c|}
 			\hline 
@@ -1061,21 +1095,97 @@ void inhibit(const Solution& solution, FNC& constraints, const ClausesGenerator&
 \end{lstlisting}
 
 \chapter{Question 6: Taille Variable}
+
+\section{Généralisation}
+Au sujet de la résolution d'instances particulières du jeu \textit{Pattern} pour lesquelles la taille serait variable:\\
+
+L'application proposée commence par analyser le fichier contenant l'énoncé du problème au moyen d'un \textit{parser}.\\
+Le fichier spécifiant les paramètres particuliers du problème, l'application est en mesure de fonctionner avec n'importe quelle taille de grille ou de bande. \\
+
+L'implémentation décrite au Chapitre 4 a été réalisée de façon à fonctionner avec des paramètres variables.\\
 %Expliquez l’impact de la taille sur le temps de calcul/complexité (en termes de contraintes et variables).
 \section{Complexité}
+%imlpies O(n)
+%load O(n²)
+%generateClauseBox O(n)
+%generateAtMostOne O(n)
+%atLeastOneh O(n)
+%
+%generateClause: generateClauseBox => O(n²) 	|=> O(n²)
+%				generateAtMostOne => O(n²)	|
+%
+%generateClauseOrder O(n)
+%generateClauseHoles:genearateClauseHoles O(n³)
+%generateClauseHolesBegin O(n²)
+%generateClauseHolesEnd O(n²)
+%
+%generateClause: generateClause => O(n³)
+%				generateClauseOrder => O(n²)
+%				generateClauseHolesBegin => O(n³)
+%				generateClauseHolesEnd => O(n³)
+%
+%generateAllClauses: generateClause =>O(n⁴)
+L'analyse des contraintes, telles que décrites dans les chapitres précédents, permettent de statuer sur la complexité de la formulation des contraintes en vue d'évaluer la satisfaisabilité du problème.\\
 
-L'analyse des contraintes permettent de statuer sur la complexité de la solution au problème
-
+Dans le pire des cas:
 \begin{enumerate}
-\item L'énumération des positions se fait en $O(n)$
-\item Contraindre à au moins une position également
+\item L'énumération des positions se fait en $O(n²)$
+\item Contraindre à au moins une position est obtenu en $O(n)$
 \item Contraindre à n'avoir au maximum qu'une position se fait en $O(n²)$
-\item Garantir l'ordre des bandes est réalisé en $O(n)$
-\item Imposer le nombre de cases vides est atteint en $O(n²)$
+\item Garantir l'ordre des bandes est réalisé en $O(n²)$
+\item Imposer le nombre de cases vides est atteint en $O(n²)$\\
 \end{enumerate}
+La création de clauses pour une bande appelle $n\times$les contraintes, donc la génération des toutes les clauses pour les n bandes se fait en $O(n⁴)$
 
-\section{Temps de calcul}
 
 
 \chapter{Question 7: Génération}
+Afin de générer des grilles, comme instance du problème SAT, pour lesquelles il existerait une unique solution, il faut rendre les \textit{entrées} variables.\\
+Les \textit{entrées} sont les paramètres du jeu, c'est-à-dire le \textbf{nombre} et \textbf{la taille des bandes} et \textbf{la taille du problème} (de la grille).\\
+
+L'idée serait de faire des littéraux à partir de chaque paramètre possible.\\ 
+
+On pourrait définir de nouvelles variables représentant la taille des bandes.\\ 
+C'est-à-dire que $C(pos,ID,k)$, la bande à la position $pos$ de taille $k$, peut être vu comme une variable pour laquelle il sera possible d'inférer des implications, par exemple:\\ Si la bande 1 est de taille 1 alors ça implique que...\\
+Si la bande 1 est de taille 2 alors ça implique que...\\
+
+De même on pourrait définir comme variable le nombre de bande par ligne ou colonne.\\
+
+Contrairement aux deux paramètres précédents qui sont limités, la taille du problème pourrait être potentiellement infinie, elle devra donc être nécessairement limitée.\\
+
+À partir de ces variables/littéraux, il sera alors possible décrire les clauses dont la conjonction définirait une valuation pour la taille des bandes, le nombre de bandes, dans un problème de taille donné, c'est-à-dire une grille.\\
+
+
+Ensuite, afin d'obtenir une nouvelle grille, il suffira de passer au solveur la précédente grille sous forme de contrainte, celui-ci donnera alors une nouvelle valuation pour toutes les variables, soit une nouvelle grille.
+
+\chapter{Usage}
+\section{Compilation}
+Pour compiler, lancer dans un terminal à partir du répertoire du projet:
+\begin{command}
+make rebuild 
+\end{command}
+
+\section{Execution}
+Pour exécuter une instance du programme, introduire par exemple:
+\begin{command}
+./run grid/2 sol/2 -tvu
+\end{command}
+où 
+\begin{itemize}
+\item[] \verb+grid/2+ est le chemin vers l'énoncé 2
+\item[] \verb+sol/2+ est le chemin du fichier de sortie (optionnel)
+\item[] \verb+-tvu+ sont des options\\
+\end{itemize}
+
+Liste des options :
+\begin{enumerate}
+\item \verb+-u+ : Lancer le test d'unicité
+\item \verb+-v+ : mode \textit{verbose}
+\item \verb+-t+ : afficher le temps
+\item \verb+-h+ \verb+--help+ : rappel de l'aide
+\item  \verb+--nocolor+ : ne pas afficher les couleurs
+\end{enumerate}
+Les options peuvent être ajoutées dans n'importe quel ordre.
+
+
 \end{document}
