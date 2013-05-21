@@ -17,31 +17,33 @@
 \contentsline {subsection}{\numberline {2.2.3}Une position au maximum}{10}
 \contentsline {subsection}{\numberline {2.2.4}De l'ordre des bandes}{11}
 \contentsline {subsection}{\numberline {2.2.5}Case(s) vide(s) entre les bandes}{12}
-\contentsline {subsection}{\numberline {2.2.6}Contraintes implicites}{12}
-\contentsline {subsubsection}{De l'interd\IeC {\'e}pendance des contraintes de lignes et de colonnes}{12}
+\contentsline {subsection}{\numberline {2.2.6}Contraintes implicites}{13}
+\contentsline {subsubsection}{De l'interd\IeC {\'e}pendance des contraintes de lignes et de colonnes}{13}
 \contentsline {subsection}{\numberline {2.2.7}Remarques}{13}
-\contentsline {chapter}{\numberline {3}Question 3: R\IeC {\'e}solution 3, 2}{14}
-\contentsline {chapter}{\numberline {4}Question 4: R\IeC {\'e}solution $size$ et $tape$}{15}
-\contentsline {section}{\numberline {4.1}Codage}{15}
-\contentsline {section}{\numberline {4.2}Repr\IeC {\'e}sentation}{15}
-\contentsline {subsection}{\numberline {4.2.1}Case, ligne et colonne}{15}
-\contentsline {subsubsection}{Case}{15}
-\contentsline {subsubsection}{Ligne et colonne}{16}
-\contentsline {subsection}{\numberline {4.2.2}Forme normale conjonctive}{16}
-\contentsline {subsection}{\numberline {4.2.3}Bande}{16}
-\contentsline {section}{\numberline {4.3}Impl\IeC {\'e}mentation des contraintes}{17}
-\contentsline {subsection}{\numberline {4.3.1}Implication des bandes}{17}
-\contentsline {subsection}{\numberline {4.3.2}Une position au maximum}{18}
-\contentsline {subsection}{\numberline {4.3.3}Au moins une position}{19}
-\contentsline {subsection}{\numberline {4.3.4}De l'ordre des bandes}{19}
-\contentsline {subsection}{\numberline {4.3.5}Case(s) vide(s) entre les bandes}{20}
-\contentsline {chapter}{\numberline {5}Question 5: Unicit\IeC {\'e}}{22}
-\contentsline {section}{\numberline {5.1}Solution}{22}
-\contentsline {section}{\numberline {5.2}Test d'unicit\IeC {\'e}}{22}
-\contentsline {chapter}{\numberline {6}Question 6: Taille Variable}{24}
-\contentsline {section}{\numberline {6.1}G\IeC {\'e}n\IeC {\'e}ralisation}{24}
-\contentsline {section}{\numberline {6.2}Complexit\IeC {\'e}}{24}
-\contentsline {chapter}{\numberline {7}Question 7: G\IeC {\'e}n\IeC {\'e}ration}{25}
-\contentsline {chapter}{\numberline {8}Usage}{26}
-\contentsline {section}{\numberline {8.1}Compilation}{26}
-\contentsline {section}{\numberline {8.2}Execution}{26}
+\contentsline {chapter}{\numberline {3}Question 3: R\IeC {\'e}solution 3, 2}{15}
+\contentsline {chapter}{\numberline {4}Question 4: R\IeC {\'e}solution $size$ et $tape$}{16}
+\contentsline {section}{\numberline {4.1}Codage}{16}
+\contentsline {section}{\numberline {4.2}Repr\IeC {\'e}sentation}{16}
+\contentsline {subsection}{\numberline {4.2.1}Case, ligne et colonne}{16}
+\contentsline {subsubsection}{Case}{16}
+\contentsline {subsubsection}{Ligne et colonne}{17}
+\contentsline {subsection}{\numberline {4.2.2}Forme normale conjonctive}{17}
+\contentsline {subsection}{\numberline {4.2.3}Bande}{17}
+\contentsline {section}{\numberline {4.3}Impl\IeC {\'e}mentation des contraintes}{18}
+\contentsline {subsection}{\numberline {4.3.1}Implication des bandes}{18}
+\contentsline {subsection}{\numberline {4.3.2}Une position au maximum}{19}
+\contentsline {subsection}{\numberline {4.3.3}Au moins une position}{20}
+\contentsline {subsection}{\numberline {4.3.4}De l'ordre des bandes}{20}
+\contentsline {subsection}{\numberline {4.3.5}Case(s) vide(s) entre les bandes}{21}
+\contentsline {chapter}{\numberline {5}Question 5: Unicit\IeC {\'e}}{23}
+\contentsline {section}{\numberline {5.1}Solution}{23}
+\contentsline {section}{\numberline {5.2}Test d'unicit\IeC {\'e}}{23}
+\contentsline {chapter}{\numberline {6}Question 6: Taille Variable}{25}
+\contentsline {section}{\numberline {6.1}G\IeC {\'e}n\IeC {\'e}ralisation}{25}
+\contentsline {section}{\numberline {6.2}Complexit\IeC {\'e}}{25}
+\contentsline {chapter}{\numberline {7}Question 7: G\IeC {\'e}n\IeC {\'e}ration}{26}
+\contentsline {section}{\numberline {7.1}Id\IeC {\'e}e g\IeC {\'e}n\IeC {\'e}rale}{26}
+\contentsline {section}{\numberline {7.2}Nouvelle grille}{26}
+\contentsline {chapter}{\numberline {8}Usage}{28}
+\contentsline {section}{\numberline {8.1}Compilation}{28}
+\contentsline {section}{\numberline {8.2}Execution}{28}
